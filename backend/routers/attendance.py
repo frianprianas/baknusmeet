@@ -30,18 +30,18 @@ async def submit_attendance(
     )
     result = await db.execute(stmt)
     if result.scalars().first():
-        return """<div class="px-4 py-3 bg-emerald-500/10 text-emerald-400 rounded-2xl text-xs font-bold border border-emerald-500/20 flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Kehadiran Tercatat
+        return """<div class="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-500/10 text-emerald-400 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold border border-emerald-500/20 flex items-center gap-1.5 sm:gap-2" title="Kehadiran Tercatat">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="hidden md:inline whitespace-nowrap">Kehadiran Tercatat</span>
         </div>"""
 
     new_attendance = Attendance(room_id=room_id, user_id=current_user.id)
     db.add(new_attendance)
     await db.commit()
     
-    return """<div class="px-4 py-3 bg-emerald-500/20 text-emerald-400 rounded-2xl text-xs font-bold border border-emerald-500/30 flex items-center gap-2 animate-pulse">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Berhasil Absen
+    return """<div class="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-500/20 text-emerald-400 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5 sm:gap-2 animate-pulse" title="Berhasil Absen">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="hidden md:inline whitespace-nowrap">Berhasil Absen</span>
         </div>"""
 
 @router.get("/{room_id}/status", response_class=HTMLResponse)
@@ -58,15 +58,15 @@ async def get_attendance_status(
     )
     result = await db.execute(stmt)
     if result.scalars().first():
-        return """<div class="px-4 py-3 bg-emerald-500/10 text-emerald-400 rounded-2xl text-xs font-bold border border-emerald-500/20 flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Kehadiran Tercatat
+        return """<div class="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-500/10 text-emerald-400 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold border border-emerald-500/20 flex items-center gap-1.5 sm:gap-2" title="Kehadiran Tercatat">
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="hidden md:inline whitespace-nowrap">Kehadiran Tercatat</span>
         </div>"""
     
-    return f"""<button hx-post="/attendance/{room_id}" hx-swap="outerHTML" 
-        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-sm font-bold shadow-lg shadow-blue-900/20 transition-all flex items-center gap-2 active:scale-95">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
-        Klik Untuk Kehadiran
+    return f"""<button hx-post="/attendance/{room_id}" hx-swap="outerHTML" title="Klik Untuk Kehadiran"
+        class="px-3 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-bold shadow-lg shadow-blue-900/20 transition-all flex items-center gap-1.5 sm:gap-2 active:scale-95 shrink-0">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
+        <span class="hidden md:inline whitespace-nowrap">Klik Untuk Kehadiran</span>
     </button>"""
 
 @router.get("/{room_id}/export")

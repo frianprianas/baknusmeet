@@ -2,8 +2,8 @@
 {% block title %}Login - BaknusMeet{% endblock %}
 {% block content %}
 <div class="min-h-screen grid lg:grid-cols-2 bg-white dark:bg-slate-900 overflow-hidden">
-    <!-- Left Visual Column with Illustration -->
-    <div class="hidden lg:flex flex-col justify-center items-center relative overflow-hidden p-20">
+    <!-- Visual Column with Illustration -->
+    <div class="flex flex-col justify-center items-center relative overflow-hidden p-8 lg:p-20 min-h-[35vh] lg:min-h-auto">
         <!-- Main Background Illustration -->
         <div class="absolute inset-0 z-0">
             <img src="/static/gbr.png" alt="Illustration" class="w-full h-full object-cover">
@@ -11,15 +11,15 @@
             <div class="absolute inset-0 bg-blue-600/40 backdrop-blur-[2px]"></div>
         </div>
 
-        <div class="relative z-10 text-center">
-            <div class="w-24 h-24 flex items-center justify-center mx-auto mb-8 overflow-hidden">
-                <img src="/static/GM.png" alt="Logo" class="w-full h-full object-contain">
+        <div class="relative z-10 text-center mt-4 lg:mt-0">
+            <div class="w-16 h-16 lg:w-24 lg:h-24 flex items-center justify-center mx-auto mb-4 lg:mb-8 overflow-hidden">
+                <img src="/static/GM.png" alt="Logo" class="w-full h-full object-contain filter drop-shadow-xl">
             </div>
-            <h1 class="text-5xl font-extrabold text-white mb-6 leading-tight font-outfit">
-                BaknusMeet <br />
+            <h1 class="text-3xl lg:text-5xl font-extrabold text-white mb-2 lg:mb-6 leading-tight font-outfit drop-shadow-md">
+                BaknusMeet <br class="hidden lg:block" />
                 <span class="text-blue-200">Official Portal</span>
             </h1>
-            <p class="text-blue-100 text-xl font-medium max-w-md">
+            <p class="text-blue-100 text-sm lg:text-xl font-medium max-w-md hidden sm:block drop-shadow">
                 Platform konferensi video aman untuk civitas Bakti Nusantara 666. Masuk menggunakan akun Mailcow Anda.
             </p>
         </div>
