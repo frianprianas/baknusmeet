@@ -202,12 +202,14 @@
                         ] : [
                             'microphone', 'camera', 'desktop', 'fullscreen', 'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand', 'videoquality', 'filmstrip', 'tileview', 'videobackgroundblur', 'help', 'whiteboard'
                         ],
+                        APP_NAME: '',
+                        NATIVE_APP_NAME: '',
                         SHOW_JITSI_WATERMARK: false,
                         SHOW_WATERMARK_FOR_GUESTS: false,
+                        SHOW_BRAND_WATERMARK: false,
+                        SHOW_POWERED_BY: false,
                         JITSI_WATERMARK_LINK: '',
                         BRAND_WATERMARK_LINK: '',
-                        APP_NAME: 'BaknusMeet',
-                        NATIVE_APP_NAME: 'BaknusMeet',
                         DEFAULT_REMOTE_DISPLAY_NAME: 'Peserta BaknusMeet',
                         DEFAULT_LOCAL_DISPLAY_NAME: 'Saya (BaknusMeet)',
                         ENABLE_DIAL_OUT: false
@@ -224,8 +226,22 @@
                         startWithAudioMuted: true,
                         startWithVideoMuted: true,
                         prejoinPageEnabled: false,
+                        prejoinConfig: {
+                            enabled: false
+                        },
                         disableDeepLinking: true,
                         hideLogoWithContext: true,
+                        whiteLabel: true,
+                        branding: {
+                            logoImageUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+                            logoClickUrl: '',
+                            disableDeepLinking: true
+                        },
+                        watermark: {
+                            enabled: false,
+                            logoImageUrl: '',
+                            logoClickUrl: ''
+                        },
                         dynamicBrandingUrl: '',
                         brandWatermarkLink: '',
                         // Ultimate security lockdown for students:
@@ -252,6 +268,27 @@
                     console.log("Joined conference, forcing avatar:", data.avatar_url);
                     const overlay = document.getElementById('loading-overlay');
                     if (overlay) overlay.classList.add('hidden');
+
+                    // BRUTE FORCE: Inject CSS to hide all possible watermark classes within the iframe
+                    // This works if same-domain or if the browser allows access to the iframe document
+                    try {
+                        const iframe = document.querySelector('iframe');
+                        if (iframe && iframe.contentDocument) {
+                            const style = iframe.contentDocument.createElement('style');
+                            style.innerHTML = `
+                                .watermark, .leftwatermark, .brand-watermark, .watermark-logo,
+                                .jitsi-watermark, .watermark-container, .powered-by {
+                                    display: none !important;
+                                    opacity: 0 !important;
+                                    visibility: hidden !important;
+                                    pointer-events: none !important;
+                                }
+                            `;
+                            iframe.contentDocument.head.appendChild(style);
+                        }
+                    } catch (e) {
+                        console.warn("Could not inject CSS into Jitsi iframe (CORS or early access):", e);
+                    }
 
                     // Force Avatar update multiple times
                     setTimeout(() => { api.executeCommand('avatarUrl', data.avatar_url); }, 1000);
