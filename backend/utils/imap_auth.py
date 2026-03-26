@@ -8,15 +8,8 @@ class IMAPAuth:
         self.port = port
         self.use_ssl = use_ssl
 
-    async def authenticate(self, email: str, password: str) -> bool:
-        """
-        Validate credentials via IMAP
-        """
+    def _sync_authenticate(self, email: str, password: str) -> bool:
         try:
-            # We connect synchronously since imaplib is synchronous.
-            # In a production FastAPI environment, it might be better to run this in a thread or use a different library.
-            # But the user mentioned 'imaplib'.
-            
             if self.use_ssl:
                 context = ssl.create_default_context()
                 mail = imaplib.IMAP4_SSL(self.host, self.port, ssl_context=context)
@@ -32,6 +25,14 @@ class IMAPAuth:
         except Exception as e:
             print(f"General Auth Error: {e}")
             return False
+
+    async def authenticate(self, email: str, password: str) -> bool:
+        """
+        Validate credentials via IMAP synchronously in a thread pool 
+        to prevent blocking the FastAPI ASGI event loop!
+        """
+        import asyncio
+        return await asyncio.to_thread(self._sync_authenticate, email, password)
 
 async def validate_credentials(email: str, password: str, settings) -> bool:
     auth_handler = IMAPAuth(
