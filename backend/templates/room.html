@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+{% block title %}Meeting - BaknusMeet{% endblock %}
+{% block content %}
+<div class="h-screen bg-slate-950 flex flex-col overflow-hidden text-white font-inter">
+    <!-- Main Navigation Header (Lowered by 4rem to avoid overlapping) -->
+    <div id="meeting-header"
+        class="fixed top-2 sm:top-16 left-0 right-0 z-[100] px-2 sm:px-4 py-2 flex items-center justify-between transition-all duration-300 pointer-events-none">
+        <!-- Left Section: Navigation & Branding -->
+        <div class="flex-1 flex items-center justify-start gap-3 pointer-events-auto">
+            <a href="/dashboard"
+                class="w-10 h-10 bg-black/40 backdrop-blur-2xl border border-white/20 rounded-xl flex items-center justify-center hover:bg-white/10 transition-all shadow-2xl group"
+                title="Kembali ke Dashboard">
+                <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current text-white/70 group-hover:text-white">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </a>
+
+            <div
+                class="flex items-center gap-3 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl">
+                <div
+                    class="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-current text-white">
+                        <path
+                            d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" />
+                    </svg>
+                </div>
+                <span class="text-[11px] font-black tracking-[0.2em] uppercase text-white/90">BaknusMeet</span>
+            </div>
+        </div>
+
+        <!-- Center Section: Action Controls & Status (Attendance, Screenshot, Presence) -->
+        <div class="flex-[3] flex items-center justify-center gap-2 sm:gap-3 pointer-events-auto flex-wrap">
+            <!-- Meeting Attendance -->
+            <div id="attendance-section" hx-get="/attendance/{{ room_id }}/status" hx-trigger="load">
+            </div>
+
+            {% if user.role.value in ['ADMIN', 'GURU', 'TU'] %}
+            <!-- Documentation Screenshot (Moderator Only) -->
+            <button onclick="takeScreenshot(this)"
+                class="px-3 sm:px-5 py-2 sm:py-2.5 bg-black/40 backdrop-blur-2xl border border-white/20 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xl transition-all flex items-center gap-2 active:scale-95 group">
+                <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-white/70 group-hover:text-indigo-400 transition-colors">
+                    <path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z" />
+                </svg>
+                <span class="hidden sm:inline">Cuplikan</span>
+            </button>
+
+            <!-- Chat History (Moderator Only) -->
+            <button onclick="saveChatHistory(this)"
+                class="px-3 sm:px-5 py-2 sm:py-2.5 bg-black/40 backdrop-blur-2xl border border-white/20 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xl transition-all flex items-center gap-2 active:scale-95 group">
+                <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-white/70 group-hover:text-amber-400 transition-colors">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" />
+                </svg>
+                <span class="hidden sm:inline">Simpan Chat</span>
+            </button>
+            <!-- Manual Attendance Sync (Moderator Only) -->
+            <button hx-post="/attendance/{{ room_id }}/sync-active" hx-swap="none"
+                class="px-3 sm:px-5 py-2 sm:py-2.5 bg-black/40 backdrop-blur-2xl border border-white/20 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xl transition-all flex items-center gap-2 active:scale-95 group">
+                <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-white/70 group-hover:text-emerald-400 transition-colors">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                <span class="hidden sm:inline">Absen</span>
+            </button>
+            {% endif %}
+
+            <!-- Presence Count -->
+            <div id="presence-badge" hx-get="/participants/{{ room_id }}/presence-badge" hx-trigger="load, every 10s"
+                class="px-3 sm:px-4 py-2 sm:py-2.5 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-lg sm:rounded-xl flex items-center gap-2 shadow-2xl min-w-[70px] sm:min-w-[110px] justify-center">
+                <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                <span class="text-[9px] sm:text-[10px] font-black text-blue-100 uppercase tracking-widest leading-none">Prtcpnts</span>
+            </div>
+        </div>
+
+        <!-- Right Section: Balanced empty space for visual alignment -->
+        <div class="flex-1"></div>
+    </div>
+
+    <!-- Jitsi Main Container -->
+    <div class="flex-1 w-full bg-black relative" hx-get="/rooms/{{ room_id }}/info" hx-trigger="load" hx-swap="none"
+        id="room-data-loader">
+        <div id="jitsi-container" class="w-full h-full"></div>
+
+        <!-- Custom Loading Overlay -->
+        <div id="loading-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 z-20">
+            <div class="flex flex-col justify-center items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-900">
+                <div
+                    class="w-full max-w-md p-6 sm:p-10 bg-white dark:bg-slate-800 rounded-3xl sm:rounded-[3rem] shadow-2xl shadow-blue-100/50 dark:shadow-blue-900/20 border border-transparent dark:border-slate-700">
+                    <div
+                        class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/50 mb-6 animate-pulse">
+                        <div class="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <h2 class="text-2xl font-black font-outfit uppercase tracking-tighter">Menyiapkan Koneksi Aman</h2>
+                    <p class="text-slate-400 font-medium italic opacity-80 mb-8 text-center">Menghubungkan ke server meeting
+                        BaknusMeet...</p>
+                </div>
+            </div>
+
+            <!-- SSL Help Button (Hidden by default, shows after 5s) -->
+            <div id="ssl-help-container" class="hidden animate-fade-in text-center max-w-sm px-6">
+                <p class="text-xs text-slate-500 mb-4 leading-relaxed">Meeting belum muncul? Browser mungkin memblokir
+                    koneksi keamanan server lokal.</p>
+                <a href="https://baknusmeet.smkbn666.sch.id" target="_blank"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 border border-indigo-500/30 rounded-xl text-xs font-bold transition-all">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                    </svg>
+                    Izinkan Koneksi Server
+                </a>
+                <p class="text-[10px] text-slate-600 mt-4 italic">Klik tombol di atas, pilih 'Advanced/Lanjutan', lalu
+                    'Proceed/Lanjutkan'. Selesai itu, segarkan halaman ini.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.body.addEventListener('htmx:afterRequest', function (evt) {
+            if (evt.detail.target.id === 'room-data-loader' && evt.detail.xhr.status === 200) {
+                const data = JSON.parse(evt.detail.xhr.responseText);
+                if (data.error === "early") {
+                    document.getElementById('loading-overlay').innerHTML = `
+                    <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 border border-blue-500/20">
+                        <svg viewBox="0 0 24 24" class="w-8 h-8 text-blue-400 fill-current"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-black font-outfit uppercase tracking-tighter text-blue-100 mb-2">Belum Waktunya Join</h2>
+                    <p class="text-slate-400 font-medium text-center mb-6">Meeting belum dimulai. Jadwal meeting: <span class="text-white font-bold">${data.wib_time}</span></p>
+                    <a href="/dashboard" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/20 font-bold text-sm">Kembali ke Dashboard</a>
+                `;
+                } else if (data.error === "ended") {
+                    document.getElementById('loading-overlay').innerHTML = `
+                    <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6 border border-red-500/20">
+                        <svg viewBox="0 0 24 24" class="w-8 h-8 text-red-500 fill-current"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-black font-outfit uppercase tracking-tighter text-red-100 mb-2">Meeting Berakhir</h2>
+                    <p class="text-slate-400 font-medium text-center mb-6">Sesi meeting ini sudah selesai dan ditutup.</p>
+                    <a href="/dashboard" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/20 font-bold text-sm">Kembali ke Dashboard</a>
+                `;
+                } else if (data.error) {
+                    document.getElementById('loading-overlay').innerHTML = `
+                    <div class="text-red-500 font-bold mb-4 font-jakarta text-xl">Terjadi Kesalahan: ${data.error}</div>
+                    <a href="/dashboard" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all border border-white/20 font-bold text-sm">Kembali</a>
+                `;
+                } else {
+                    console.log("JITSI DEBUG:", data);
+                    initializeJitsi(data);
+                }
+            }
+        });
+
+        function initializeJitsi(data) {
+            const script = document.createElement("script");
+            script.src = `${data.jitsi_base_url}/external_api.js`;
+            script.async = true;
+
+            // Timeout for loading script
+            const scriptLoaderTimeout = setTimeout(() => {
+                console.error("Jitsi script load timed out");
+                document.getElementById('loading-overlay').innerHTML = `
+                <div class="text-red-500 font-bold mb-4">Gagal terhubung ke server meeting.</div>
+                <a href="/dashboard" class="btn-primary">Kembali ke Dashboard</a>
+            `;
+            }, 10000);
+
+            script.onload = () => {
+                clearTimeout(scriptLoaderTimeout);
+                const domain = data.jitsi_base_url.replace("https://", "").replace("http://", "");
+
+                // Show SSL help after 5 seconds if overlay is still visible
+                setTimeout(() => {
+                    const sslHelp = document.getElementById('ssl-help-container');
+                    const overlay = document.getElementById('loading-overlay');
+                    if (overlay && !overlay.classList.contains('hidden')) {
+                        sslHelp.classList.remove('hidden');
+                        // Added a styling to ensure visibility
+                        sslHelp.style.display = 'block';
+                    }
+                }, 5000);
+
+                // Safety: hide overlay anyway after 8 seconds
+                setTimeout(() => {
+                    const overlay = document.getElementById('loading-overlay');
+                    if (overlay) overlay.classList.add('hidden');
+                }, 8000);
+
+                const api = new window.JitsiMeetExternalAPI(domain, {
+                    roomName: data.jitsi_room_id,
+                    width: "100%",
+                    height: "100%",
+                    parentNode: document.querySelector("#jitsi-container"),
+                    jwt: data.token,
+                    userInfo: {
+                        displayName: data.user_name,
+                        email: data.user_email,
+                    },
+                    interfaceConfigOverwrite: {
+                        TOOLBAR_BUTTONS: data.is_moderator ? [
+                            'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
+                            'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                            'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+                            'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+                            'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
+                            'security', 'whiteboard'
+                        ] : [
+                            'microphone', 'camera', 'desktop', 'fullscreen', 'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand', 'videoquality', 'filmstrip', 'tileview', 'videobackgroundblur', 'help', 'whiteboard'
+                        ],
+                        SHOW_JITSI_WATERMARK: false,
+                        SHOW_WATERMARK_FOR_GUESTS: false,
+                        JITSI_WATERMARK_LINK: '',
+                        BRAND_WATERMARK_LINK: '',
+                        APP_NAME: 'BaknusMeet',
+                        NATIVE_APP_NAME: 'BaknusMeet',
+                        DEFAULT_REMOTE_DISPLAY_NAME: 'Peserta BaknusMeet',
+                        DEFAULT_LOCAL_DISPLAY_NAME: 'Saya (BaknusMeet)',
+                        ENABLE_DIAL_OUT: false
+                    },
+                    configOverwrite: {
+                        avatarUrl: data.avatar_url,
+                        avatarURL: data.avatar_url,
+                        enableClosePage: true,
+                        disableThirdPartyRequests: false,
+                        gravatar: {
+                            disabled: true
+                        },
+                        resolution: 720,
+                        startWithAudioMuted: true,
+                        startWithVideoMuted: true,
+                        prejoinPageEnabled: false,
+                        disableDeepLinking: true,
+                        hideLogoWithContext: true,
+                        dynamicBrandingUrl: '',
+                        brandWatermarkLink: '',
+                        // Ultimate security lockdown for students:
+                        enableFeaturesBasedOnToken: true,
+                        everyoneIsModerator: false,
+                        enableClosingMeeting: data.is_moderator,
+                        disableRemoteMute: !data.is_moderator,
+                        disableKick: !data.is_moderator,
+                        disableModeratorIndicator: !data.is_moderator,
+                        readOnlyName: !data.is_moderator,
+                        remoteVideoMenu: {
+                            disableModeratorControls: !data.is_moderator
+                        },
+                        endConferenceNotificationEnabled: data.is_moderator,
+                        p2p: {
+                            enabled: true
+                        },
+                    },
+                });
+
+                window.jitsiApi = api;
+
+                api.addEventListener("videoConferenceJoined", () => {
+                    console.log("Joined conference, forcing avatar:", data.avatar_url);
+                    const overlay = document.getElementById('loading-overlay');
+                    if (overlay) overlay.classList.add('hidden');
+
+                    // Force Avatar update multiple times
+                    setTimeout(() => { api.executeCommand('avatarUrl', data.avatar_url); }, 1000);
+                    setTimeout(() => { api.executeCommand('avatarUrl', data.avatar_url); }, 5000);
+
+                    fetch(`/participants/{{ room_id }}/join`, { method: "POST" });
+                });
+
+                // Chat Monitoring
+                window.sessionChat = [];
+                api.addEventListener("incomingMessage", (msg) => {
+                    window.sessionChat.push({
+                        time: new Date().toLocaleTimeString(),
+                        sender: msg.nick || "System",
+                        text: msg.message
+                    });
+                });
+
+                api.addEventListener("outgoingMessage", (msg) => {
+                    window.sessionChat.push({
+                        time: new Date().toLocaleTimeString(),
+                        sender: "Saya",
+                        text: msg.message
+                    });
+                });
+
+                api.addEventListener("readyToClose", () => {
+                    window.location.href = "/dashboard";
+                });
+            };
+
+            script.onerror = () => {
+                clearTimeout(scriptLoaderTimeout);
+                document.getElementById('loading-overlay').innerHTML = `
+                <div class="text-red-500 font-bold mb-4">Server Jitsi tidak merespon.</div>
+                <a href="/dashboard" class="btn-primary">Kembali ke Dashboard</a>
+            `;
+            };
+
+            document.body.appendChild(script);
+        }
+
+        async function takeScreenshot(btn) {
+            if (!window.jitsiApi) {
+                showToast('❌ Jitsi belum siap, tunggu sebentar.', 'error');
+                return;
+            }
+
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> <span>Menunggu...</span>`;
+
+            try {
+                let dataURL = null;
+
+                // 1. Coba Jitsi API (Hanya menangkap video jika aktif)
+                try {
+                    if (typeof window.jitsiApi.captureLargeVideoScreenshot === 'function') {
+                        const captured = await window.jitsiApi.captureLargeVideoScreenshot();
+                        if (captured && captured.dataURL) {
+                            dataURL = captured.dataURL;
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Jitsi capture failed", e);
+                }
+
+                // 2. Fallback ke Tangkap Layar Browser (Menangkap seluruh tampilan termasuk avatar/UI)
+                if (!dataURL) {
+                    showToast('📸 Menggunakan mode Tangkap Layar karena video tidak aktif...', 'success');
+                    dataURL = await capturePageScreenshot();
+                }
+
+                if (!dataURL) {
+                    throw new Error("Gagal mengambil gambar. Pastikan memberikan izin akses layar.");
+                }
+
+                const response = await fetch(`/rooms/{{ room_id }}/screenshot`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ image_data: dataURL })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    showToast('✅ Dokumentasi berhasil disimpan ke BaknusDrive!', 'success');
+                } else {
+                    showToast(`❌ Gagal: ${result.detail || 'Kesalahan server'}`, 'error');
+                }
+            } catch (err) {
+                console.error("SCREENSHOT ERROR:", err);
+                showToast('❌ Gagal: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        }
+
+        /**
+         * Fallback method using browser's getDisplayMedia to capture the entire tab.
+         */
+        async function capturePageScreenshot() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { displaySurface: "browser" },
+                    audio: false
+                });
+
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                await video.play();
+
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const dataURL = canvas.toDataURL('image/jpeg', 0.85);
+
+                // Stop all tracks
+                stream.getTracks().forEach(track => track.stop());
+
+                return dataURL;
+            } catch (err) {
+                console.error("CAPTURE PAGE ERROR:", err);
+                return null;
+            }
+        }
+
+        async function saveChatHistory(btn) {
+            if (!window.sessionChat || window.sessionChat.length === 0) {
+                showToast('⚠️ Belum ada pesan chat untuk disimpan.', 'warning');
+                return;
+            }
+
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> <span>Menyimpan...</span>`;
+
+            try {
+                // Format chat for text file
+                const formattedChat = window.sessionChat.map(m => `[${m.time}] ${m.sender}: ${m.text}`).join("\n");
+
+                const response = await fetch(`/rooms/{{ room_id }}/save-chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ chat_content: formattedChat })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    showToast('✅ Riwayat chat berhasil disimpan ke BaknusDrive!', 'success');
+                } else {
+                    showToast(`❌ Gagal: ${result.detail || 'Kesalahan server'}`, 'error');
+                }
+            } catch (err) {
+                console.error("SAVE CHAT ERROR:", err);
+                showToast('❌ Gagal: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        }
+    </script>
+    {% endblock %}

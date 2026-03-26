@@ -1,0 +1,39 @@
+# Secrets
+.env
+jitsi.env
+*.key
+*.pem
+*.crt
+*.pfx
+
+# Jitsi Sensitive Configs
+jitsi-config/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+
+# Workspace/IDE
+.gemini/
+.agent/
+.vscode/
+.idea/
+
+# Database data (if stored locally)
+db_data/
+*.db
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Node/Frontend
+node_modules/
+dist/
+build/

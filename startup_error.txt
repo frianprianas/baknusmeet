@@ -1,0 +1,912 @@
+﻿backend-1  | INFO:     Will watch for changes in these directories: ['/']
+backend-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+backend-1  | INFO:     Started reloader process [1] using WatchFiles
+backend-1  | INFO:     Started server process [8]
+backend-1  | INFO:     Waiting for application startup.
+backend-1  | 2026-03-23 12:32:05,523 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+backend-1  | 2026-03-23 12:32:05,523 INFO sqlalchemy.engine.Engine [raw sql] ()
+backend-1  | 2026-03-23 12:32:05,527 INFO sqlalchemy.engine.Engine select current_schema()
+backend-1  | 2026-03-23 12:32:05,527 INFO sqlalchemy.engine.Engine [raw sql] ()
+backend-1  | 2026-03-23 12:32:05,529 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+backend-1  | 2026-03-23 12:32:05,529 INFO sqlalchemy.engine.Engine [raw sql] ()
+backend-1  | 2026-03-23 12:32:05,531 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:32:05,543 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:32:05,543 INFO sqlalchemy.engine.Engine [generated in 0.00031s] ('users', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:32:05,583 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:32:05,584 INFO sqlalchemy.engine.Engine [cached since 0.04092s ago] ('rooms', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:32:05,587 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:32:05,588 INFO sqlalchemy.engine.Engine [cached since 0.0449s ago] ('participants', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:32:05,595 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:32:05,596 INFO sqlalchemy.engine.Engine [cached since 0.05295s ago] ('sessions', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:32:05,606 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_type.typname 
+backend-1  | FROM pg_catalog.pg_type JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_type.typnamespace 
+backend-1  | WHERE pg_catalog.pg_type.typname = $1::VARCHAR AND pg_catalog.pg_type_is_visible(pg_catalog.pg_type.oid) AND pg_catalog.pg_namespace.nspname != $2::VARCHAR
+backend-1  | 2026-03-23 12:32:05,607 INFO sqlalchemy.engine.Engine [generated in 0.00051s] ('userrole', 'pg_catalog')
+backend-1  | 2026-03-23 12:32:05,617 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_type.typname 
+backend-1  | FROM pg_catalog.pg_type JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_type.typnamespace 
+backend-1  | WHERE pg_catalog.pg_type.typname = $1::VARCHAR AND pg_catalog.pg_type_is_visible(pg_catalog.pg_type.oid) AND pg_catalog.pg_namespace.nspname != $2::VARCHAR
+backend-1  | 2026-03-23 12:32:05,617 INFO sqlalchemy.engine.Engine [cached since 0.01105s ago] ('roomstatus', 'pg_catalog')
+backend-1  | 2026-03-23 12:32:05,621 INFO sqlalchemy.engine.Engine COMMIT
+backend-1  | INFO:     Application startup complete.
+backend-1  | 2026-03-23 12:32:32,246 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:32:32,269 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:32:32,269 INFO sqlalchemy.engine.Engine [generated in 0.00024s] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:32:32,301 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:32:32,301 INFO sqlalchemy.engine.Engine [generated in 0.00022s] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:53164 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:32:32,334 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:46750 - "GET /auth/logout HTTP/1.1" 302 Found
+backend-1  | INFO:     172.20.0.1:46750 - "GET /login HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:32:56,547 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:32:56,547 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:32:56,547 INFO sqlalchemy.engine.Engine [cached since 24.28s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:32:56,555 INFO sqlalchemy.engine.Engine UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER
+backend-1  | 2026-03-23 12:32:56,555 INFO sqlalchemy.engine.Engine [generated in 0.00022s] ('GURU', 2)
+backend-1  | 2026-03-23 12:32:56,574 INFO sqlalchemy.engine.Engine COMMIT
+backend-1  | 2026-03-23 12:32:56,584 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:32:56,585 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.id = $1::INTEGER
+backend-1  | 2026-03-23 12:32:56,586 INFO sqlalchemy.engine.Engine [generated in 0.00020s] (2,)
+backend-1  | INFO:     172.20.0.1:46762 - "POST /auth/login HTTP/1.1" 303 See Other
+backend-1  | 2026-03-23 12:32:56,594 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:32:56,621 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:32:56,621 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:32:56,621 INFO sqlalchemy.engine.Engine [cached since 24.36s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | INFO:     172.20.0.1:46762 - "GET /dashboard HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:32:56,646 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:32:56,882 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:32:56,883 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:32:56,883 INFO sqlalchemy.engine.Engine [cached since 24.62s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:32:56,888 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:32:56,888 INFO sqlalchemy.engine.Engine [generated in 0.00027s] (2,)
+backend-1  | INFO:     172.20.0.1:46762 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:32:56,929 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:33:06,878 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:33:06,879 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:33:06,879 INFO sqlalchemy.engine.Engine [cached since 34.61s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:33:06,883 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:33:06,883 INFO sqlalchemy.engine.Engine [cached since 9.995s ago] (2,)
+backend-1  | INFO:     172.20.0.1:42508 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:33:06,898 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:33:16,989 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:33:16,990 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:33:16,990 INFO sqlalchemy.engine.Engine [cached since 44.72s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:33:16,994 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:33:16,994 INFO sqlalchemy.engine.Engine [cached since 20.11s ago] (2,)
+backend-1  | INFO:     172.20.0.1:36558 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:33:17,011 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:33:27,983 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:33:27,983 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:33:27,984 INFO sqlalchemy.engine.Engine [cached since 55.72s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:33:27,988 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:33:27,988 INFO sqlalchemy.engine.Engine [cached since 31.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:38708 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:33:28,006 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:33:38,986 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:33:38,986 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:33:38,986 INFO sqlalchemy.engine.Engine [cached since 66.72s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:33:38,989 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:33:38,989 INFO sqlalchemy.engine.Engine [cached since 42.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:47560 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:33:39,008 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:33:49,983 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:33:49,983 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:33:49,983 INFO sqlalchemy.engine.Engine [cached since 77.72s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:33:49,985 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:33:49,985 INFO sqlalchemy.engine.Engine [cached since 53.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:37090 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:33:50,000 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:34:00,982 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:34:00,982 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:34:00,982 INFO sqlalchemy.engine.Engine [cached since 88.72s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:34:00,984 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:34:00,984 INFO sqlalchemy.engine.Engine [cached since 64.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:54486 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:34:01,016 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:34:11,993 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:34:11,993 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:34:11,993 INFO sqlalchemy.engine.Engine [cached since 99.73s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:34:11,995 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:34:11,995 INFO sqlalchemy.engine.Engine [cached since 75.11s ago] (2,)
+backend-1  | INFO:     172.20.0.1:34054 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:34:12,018 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:34:45,006 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:34:45,007 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:34:45,007 INFO sqlalchemy.engine.Engine [cached since 132.7s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:34:45,017 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:34:45,017 INFO sqlalchemy.engine.Engine [cached since 108.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:57796 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:34:45,054 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:35:44,982 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:35:44,982 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:35:44,982 INFO sqlalchemy.engine.Engine [cached since 192.7s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:35:44,984 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:35:44,984 INFO sqlalchemy.engine.Engine [cached since 168.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:56786 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:35:44,998 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:36:44,982 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:36:44,982 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:36:44,982 INFO sqlalchemy.engine.Engine [cached since 252.7s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:36:44,984 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:36:44,984 INFO sqlalchemy.engine.Engine [cached since 228.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:36316 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:36:44,999 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:36:54,984 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:36:54,984 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:36:54,984 INFO sqlalchemy.engine.Engine [cached since 262.7s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:36:54,988 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:36:54,988 INFO sqlalchemy.engine.Engine [cached since 238.1s ago] (2,)
+backend-1  | INFO:     172.20.0.1:34662 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:36:55,007 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:34662 - "GET /auth/logout HTTP/1.1" 302 Found
+backend-1  | INFO:     172.20.0.1:34662 - "GET /login HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:37:15,124 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:37:15,124 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:37:15,124 INFO sqlalchemy.engine.Engine [cached since 282.9s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:37:15,126 INFO sqlalchemy.engine.Engine UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER
+backend-1  | 2026-03-23 12:37:15,126 INFO sqlalchemy.engine.Engine [cached since 258.6s ago] ('ADMIN', 1)
+backend-1  | 2026-03-23 12:37:15,143 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:34678 - "POST /auth/login HTTP/1.1" 500 Internal Server Error
+backend-1  | ERROR:    Exception in ASGI application
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 550, in _prepare_and_execute
+backend-1  |     self._rows = deque(await prepared_stmt.fetch(*parameters))
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 177, in fetch
+backend-1  |     data = await self.__bind_execute(args, 0, timeout)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 268, in __bind_execute
+backend-1  |     data, status, _ = await self.__do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 257, in __do_execute
+backend-1  |     return await executor(protocol)
+backend-1  |   File "asyncpg/protocol/protocol.pyx", line 205, in bind_execute
+backend-1  | asyncpg.exceptions.InvalidTextRepresentationError: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+backend-1  |     result = await app(  # type: ignore[func-returns-value]
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+backend-1  |     return await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1160, in __call__
+backend-1  |     await super().__call__(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 90, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+backend-1  |     await self.app(scope, receive, _send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 96, in __call__
+backend-1  |     await self.simple_response(scope, receive, send, request_headers=headers)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+backend-1  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 660, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 680, in app
+backend-1  |     await route.handle(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 130, in app
+backend-1  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+backend-1  |     response = await f(request)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+backend-1  |     raw_response = await run_endpoint_function(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+backend-1  |     return await dependant.call(**values)
+backend-1  |   File "/backend/routers/auth.py", line 75, in login
+backend-1  |     await db.commit()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/session.py", line 1000, in commit
+backend-1  |     await greenlet_spawn(self.sync_session.commit)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+backend-1  |     result = context.switch(value)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+backend-1  |     trans.commit(_to_root=True)
+backend-1  |   File "<string>", line 2, in commit
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+backend-1  |     self._prepare_impl()
+backend-1  |   File "<string>", line 2, in _prepare_impl
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+backend-1  |     self.session.flush()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+backend-1  |     self._flush(objects)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+backend-1  |     with util.safe_reraise():
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 121, in __exit__
+backend-1  |     raise exc_value.with_traceback(exc_tb)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+backend-1  |     flush_context.execute()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+backend-1  |     rec.execute(self)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+backend-1  |     util.preloaded.orm_persistence.save_obj(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+backend-1  |     _emit_update_statements(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+backend-1  |     c = connection.execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+backend-1  |     return meth(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+backend-1  |     return connection._execute_clauseelement(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+backend-1  |     ret = self._execute_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+backend-1  |     return self._exec_single_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+backend-1  |     self._handle_dbapi_exception(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+backend-1  |     raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | [SQL: UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER]
+backend-1  | [parameters: ('ADMIN', 1)]
+backend-1  | (Background on this error at: https://sqlalche.me/e/20/dbapi)
+backend-1  | INFO:     172.20.0.1:40228 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+backend-1  | 2026-03-23 12:37:25,642 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:37:25,642 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:37:25,642 INFO sqlalchemy.engine.Engine [cached since 293.4s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:37:25,645 INFO sqlalchemy.engine.Engine UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER
+backend-1  | 2026-03-23 12:37:25,646 INFO sqlalchemy.engine.Engine [cached since 269.1s ago] ('ADMIN', 1)
+backend-1  | 2026-03-23 12:37:25,653 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:40228 - "POST /auth/login HTTP/1.1" 500 Internal Server Error
+backend-1  | ERROR:    Exception in ASGI application
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 550, in _prepare_and_execute
+backend-1  |     self._rows = deque(await prepared_stmt.fetch(*parameters))
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 177, in fetch
+backend-1  |     data = await self.__bind_execute(args, 0, timeout)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 268, in __bind_execute
+backend-1  |     data, status, _ = await self.__do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 257, in __do_execute
+backend-1  |     return await executor(protocol)
+backend-1  |   File "asyncpg/protocol/protocol.pyx", line 205, in bind_execute
+backend-1  | asyncpg.exceptions.InvalidTextRepresentationError: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+backend-1  |     result = await app(  # type: ignore[func-returns-value]
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+backend-1  |     return await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1160, in __call__
+backend-1  |     await super().__call__(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 90, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+backend-1  |     await self.app(scope, receive, _send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 96, in __call__
+backend-1  |     await self.simple_response(scope, receive, send, request_headers=headers)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+backend-1  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 660, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 680, in app
+backend-1  |     await route.handle(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 130, in app
+backend-1  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+backend-1  |     response = await f(request)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+backend-1  |     raw_response = await run_endpoint_function(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+backend-1  |     return await dependant.call(**values)
+backend-1  |   File "/backend/routers/auth.py", line 75, in login
+backend-1  |     await db.commit()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/session.py", line 1000, in commit
+backend-1  |     await greenlet_spawn(self.sync_session.commit)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+backend-1  |     result = context.switch(value)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+backend-1  |     trans.commit(_to_root=True)
+backend-1  |   File "<string>", line 2, in commit
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+backend-1  |     self._prepare_impl()
+backend-1  |   File "<string>", line 2, in _prepare_impl
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+backend-1  |     self.session.flush()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+backend-1  |     self._flush(objects)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+backend-1  |     with util.safe_reraise():
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 121, in __exit__
+backend-1  |     raise exc_value.with_traceback(exc_tb)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+backend-1  |     flush_context.execute()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+backend-1  |     rec.execute(self)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+backend-1  |     util.preloaded.orm_persistence.save_obj(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+backend-1  |     _emit_update_statements(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+backend-1  |     c = connection.execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+backend-1  |     return meth(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+backend-1  |     return connection._execute_clauseelement(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+backend-1  |     ret = self._execute_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+backend-1  |     return self._exec_single_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+backend-1  |     self._handle_dbapi_exception(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+backend-1  |     raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | [SQL: UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER]
+backend-1  | [parameters: ('ADMIN', 1)]
+backend-1  | (Background on this error at: https://sqlalche.me/e/20/dbapi)
+backend-1  | INFO:     172.20.0.1:53828 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+backend-1  | INFO:     172.20.0.1:42310 - "GET /login HTTP/1.1" 200 OK
+backend-1  | IMAP Auth Error: b'[AUTHENTICATIONFAILED] Authentication failed.'
+backend-1  | INFO:     172.20.0.1:42326 - "POST /auth/login HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:44:57,546 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:44:57,550 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:44:57,550 INFO sqlalchemy.engine.Engine [cached since 745.3s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:44:57,562 INFO sqlalchemy.engine.Engine UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER
+backend-1  | 2026-03-23 12:44:57,562 INFO sqlalchemy.engine.Engine [cached since 721.1s ago] ('ADMIN', 1)
+backend-1  | 2026-03-23 12:44:57,565 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:47194 - "POST /auth/login HTTP/1.1" 500 Internal Server Error
+backend-1  | ERROR:    Exception in ASGI application
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 550, in _prepare_and_execute
+backend-1  |     self._rows = deque(await prepared_stmt.fetch(*parameters))
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 177, in fetch
+backend-1  |     data = await self.__bind_execute(args, 0, timeout)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 268, in __bind_execute
+backend-1  |     data, status, _ = await self.__do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 257, in __do_execute
+backend-1  |     return await executor(protocol)
+backend-1  |   File "asyncpg/protocol/protocol.pyx", line 205, in bind_execute
+backend-1  | asyncpg.exceptions.InvalidTextRepresentationError: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+backend-1  |     result = await app(  # type: ignore[func-returns-value]
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+backend-1  |     return await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1160, in __call__
+backend-1  |     await super().__call__(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 90, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+backend-1  |     await self.app(scope, receive, _send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 96, in __call__
+backend-1  |     await self.simple_response(scope, receive, send, request_headers=headers)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+backend-1  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 660, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 680, in app
+backend-1  |     await route.handle(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 130, in app
+backend-1  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+backend-1  |     response = await f(request)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+backend-1  |     raw_response = await run_endpoint_function(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+backend-1  |     return await dependant.call(**values)
+backend-1  |   File "/backend/routers/auth.py", line 75, in login
+backend-1  |     await db.commit()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/session.py", line 1000, in commit
+backend-1  |     await greenlet_spawn(self.sync_session.commit)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+backend-1  |     result = context.switch(value)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+backend-1  |     trans.commit(_to_root=True)
+backend-1  |   File "<string>", line 2, in commit
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+backend-1  |     self._prepare_impl()
+backend-1  |   File "<string>", line 2, in _prepare_impl
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+backend-1  |     self.session.flush()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+backend-1  |     self._flush(objects)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+backend-1  |     with util.safe_reraise():
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 121, in __exit__
+backend-1  |     raise exc_value.with_traceback(exc_tb)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+backend-1  |     flush_context.execute()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+backend-1  |     rec.execute(self)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+backend-1  |     util.preloaded.orm_persistence.save_obj(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+backend-1  |     _emit_update_statements(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+backend-1  |     c = connection.execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+backend-1  |     return meth(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+backend-1  |     return connection._execute_clauseelement(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+backend-1  |     ret = self._execute_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+backend-1  |     return self._exec_single_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+backend-1  |     self._handle_dbapi_exception(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+backend-1  |     raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | [SQL: UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER]
+backend-1  | [parameters: ('ADMIN', 1)]
+backend-1  | (Background on this error at: https://sqlalche.me/e/20/dbapi)
+backend-1  | 2026-03-23 12:45:02,572 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:45:02,572 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:45:02,572 INFO sqlalchemy.engine.Engine [cached since 750.4s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:45:02,574 INFO sqlalchemy.engine.Engine UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER
+backend-1  | 2026-03-23 12:45:02,574 INFO sqlalchemy.engine.Engine [cached since 726.1s ago] ('ADMIN', 1)
+backend-1  | 2026-03-23 12:45:02,575 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:59644 - "POST /auth/login HTTP/1.1" 500 Internal Server Error
+backend-1  | ERROR:    Exception in ASGI application
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 550, in _prepare_and_execute
+backend-1  |     self._rows = deque(await prepared_stmt.fetch(*parameters))
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 177, in fetch
+backend-1  |     data = await self.__bind_execute(args, 0, timeout)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 268, in __bind_execute
+backend-1  |     data, status, _ = await self.__do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/asyncpg/prepared_stmt.py", line 257, in __do_execute
+backend-1  |     return await executor(protocol)
+backend-1  |   File "asyncpg/protocol/protocol.pyx", line 205, in bind_execute
+backend-1  | asyncpg.exceptions.InvalidTextRepresentationError: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | 
+backend-1  | The above exception was the direct cause of the following exception:
+backend-1  | 
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+backend-1  |     result = await app(  # type: ignore[func-returns-value]
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+backend-1  |     return await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1160, in __call__
+backend-1  |     await super().__call__(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 90, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+backend-1  |     await self.app(scope, receive, _send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 96, in __call__
+backend-1  |     await self.simple_response(scope, receive, send, request_headers=headers)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+backend-1  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 660, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 680, in app
+backend-1  |     await route.handle(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 130, in app
+backend-1  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+backend-1  |     response = await f(request)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+backend-1  |     raw_response = await run_endpoint_function(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+backend-1  |     return await dependant.call(**values)
+backend-1  |   File "/backend/routers/auth.py", line 75, in login
+backend-1  |     await db.commit()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/session.py", line 1000, in commit
+backend-1  |     await greenlet_spawn(self.sync_session.commit)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+backend-1  |     result = context.switch(value)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+backend-1  |     trans.commit(_to_root=True)
+backend-1  |   File "<string>", line 2, in commit
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1311, in commit
+backend-1  |     self._prepare_impl()
+backend-1  |   File "<string>", line 2, in _prepare_impl
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+backend-1  |     ret_value = fn(self, *arg, **kw)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1286, in _prepare_impl
+backend-1  |     self.session.flush()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+backend-1  |     self._flush(objects)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+backend-1  |     with util.safe_reraise():
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 121, in __exit__
+backend-1  |     raise exc_value.with_traceback(exc_tb)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+backend-1  |     flush_context.execute()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+backend-1  |     rec.execute(self)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+backend-1  |     util.preloaded.orm_persistence.save_obj(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+backend-1  |     _emit_update_statements(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+backend-1  |     c = connection.execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+backend-1  |     return meth(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+backend-1  |     return connection._execute_clauseelement(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+backend-1  |     ret = self._execute_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+backend-1  |     return self._exec_single_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+backend-1  |     self._handle_dbapi_exception(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+backend-1  |     raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | [SQL: UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER]
+backend-1  | [parameters: ('ADMIN', 1)]
+backend-1  | (Background on this error at: https://sqlalche.me/e/20/dbapi)
+backend-1  | INFO:     172.20.0.1:59648 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+backend-1  | 2026-03-23 12:52:11,116 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:52:11,116 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:52:11,117 INFO sqlalchemy.engine.Engine [cached since 1179s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:52:11,118 INFO sqlalchemy.engine.Engine UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER
+backend-1  | 2026-03-23 12:52:11,118 INFO sqlalchemy.engine.Engine [cached since 1155s ago] ('ADMIN', 1)
+backend-1  | 2026-03-23 12:52:11,121 INFO sqlalchemy.engine.Engine COMMIT
+backend-1  | 2026-03-23 12:52:11,129 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:52:11,130 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.id = $1::INTEGER
+backend-1  | 2026-03-23 12:52:11,130 INFO sqlalchemy.engine.Engine [cached since 1155s ago] (1,)
+backend-1  | INFO:     172.20.0.1:54058 - "POST /auth/login HTTP/1.1" 303 See Other
+backend-1  | 2026-03-23 12:52:11,138 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:52:11,145 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:52:11,146 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:52:11,146 INFO sqlalchemy.engine.Engine [cached since 1179s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | INFO:     172.20.0.1:54058 - "GET /dashboard HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:52:11,161 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:54058 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+backend-1  | 2026-03-23 12:52:11,469 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:52:11,472 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:52:11,472 INFO sqlalchemy.engine.Engine [cached since 1179s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:52:11,478 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:52:11,478 INFO sqlalchemy.engine.Engine [cached since 1155s ago] (1,)
+backend-1  | INFO:     172.20.0.1:54058 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:52:11,514 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:54062 - "GET /admin/management HTTP/1.1" 404 Not Found
+backend-1  | 2026-03-23 12:52:21,475 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:52:21,475 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:52:21,475 INFO sqlalchemy.engine.Engine [cached since 1189s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:52:21,478 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:52:21,478 INFO sqlalchemy.engine.Engine [cached since 1165s ago] (1,)
+backend-1  | INFO:     172.20.0.1:54062 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:52:21,499 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:54062 - "GET /admin/management HTTP/1.1" 404 Not Found
+backend-1  | INFO:     172.20.0.1:54062 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found
+backend-1  | INFO:     Will watch for changes in these directories: ['/']
+backend-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+backend-1  | INFO:     Started reloader process [1] using WatchFiles
+backend-1  | Process SpawnProcess-1:
+backend-1  | Traceback (most recent call last):
+backend-1  |   File "/usr/local/lib/python3.10/multiprocessing/process.py", line 314, in _bootstrap
+backend-1  |     self.run()
+backend-1  |   File "/usr/local/lib/python3.10/multiprocessing/process.py", line 108, in run
+backend-1  |     self._target(*self._args, **self._kwargs)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
+backend-1  |     target(sockets=sockets)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 75, in run
+backend-1  |     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/_compat.py", line 60, in asyncio_run
+backend-1  |     return loop.run_until_complete(main)
+backend-1  |   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 79, in serve
+backend-1  |     await self._serve(sockets)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 86, in _serve
+backend-1  |     config.load()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/config.py", line 441, in load
+backend-1  |     self.loaded_app = import_from_string(self.app)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+backend-1  |     module = importlib.import_module(module_str)
+backend-1  |   File "/usr/local/lib/python3.10/importlib/__init__.py", line 126, in import_module
+backend-1  |     return _bootstrap._gcd_import(name[level:], package, level)
+backend-1  |   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+backend-1  |   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+backend-1  |   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+backend-1  |   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+backend-1  |   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+backend-1  |   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+backend-1  |   File "/backend/main.py", line 53, in <module>
+backend-1  |     @app.get("/admin/management", response_class=HTMLResponse)
+backend-1  | NameError: name 'HTMLResponse' is not defined

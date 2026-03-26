@@ -1,0 +1,20 @@
+﻿backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 13:18:31,973 INFO sqlalchemy.engine.Engine [cached since 357.6s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 13:18:31,974 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 13:18:31,974 INFO sqlalchemy.engine.Engine [cached since 330.2s ago] (1,)
+backend-1  | INFO:     172.20.0.1:58242 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 13:18:31,987 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 13:18:42,971 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 13:18:42,972 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.is_active, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 13:18:42,972 INFO sqlalchemy.engine.Engine [cached since 368.6s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 13:18:42,974 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 13:18:42,974 INFO sqlalchemy.engine.Engine [cached since 341.2s ago] (1,)
+backend-1  | INFO:     172.20.0.1:46656 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 13:18:42,986 INFO sqlalchemy.engine.Engine ROLLBACK

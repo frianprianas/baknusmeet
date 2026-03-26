@@ -1,0 +1,107 @@
+{% if toast_error %}
+<div id="toast-error-msg" data-msg="{{ toast_error }}" class="hidden"></div>
+{% endif %}
+{% if rooms %}
+
+{% for room in rooms %}
+<div class="card p-3 room-card animate-slide-in" data-status="{{ room.status.value if room.status else room.status }}">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <!-- Left: Info -->
+        <div class="flex items-start sm:items-center gap-3">
+            <!-- Icon Hide on small phones -->
+            <div
+                class="hidden xs:flex w-9 h-9 rounded-xl items-center justify-center flex-shrink-0
+                {% if room.status.value == 'active' or room.status == 'active' %}bg-green-100{% else %}bg-blue-50{% endif %}">
+                <svg viewBox="0 0 24 24"
+                    class="w-5 h-5 fill-current
+                    {% if room.status.value == 'active' or room.status == 'active' %}text-green-600{% else %}text-blue-500{% endif %}">
+                    <path
+                        d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" />
+                </svg>
+            </div>
+            <!-- Title & meta -->
+            <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="font-bold text-slate-900 text-[14px] sm:text-[15px] font-jakarta truncate">{{ room.title }}</h3>
+                    {% if room.status.value == 'active' or room.status == 'active' %}
+                    <span class="badge-active !text-[9px] !px-1.5 !py-0.5">Live</span>
+                    {% else %}
+                    <span class="badge-scheduled !text-[9px] !px-1.5 !py-0.5">Jadwal</span>
+                    {% endif %}
+                </div>
+                <div class="flex items-center gap-x-3 gap-y-1 mt-1 flex-wrap">
+                    <p class="text-slate-500 text-[11px] font-medium flex items-center gap-1">
+                        {% if room.scheduled_at %}
+                        {% set local_dt = room.scheduled_at + timedelta(hours=7) %}
+                        {{ local_dt.strftime('%d %b, %H:%M') }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </p>
+                    <p class="text-slate-400 text-[11px] flex items-center gap-1">
+                        {{ room.duration or 120 }}m
+                    </p>
+                    {% if room.host %}
+                    <p class="text-slate-400 text-[10px] hidden sx:flex items-center gap-1">
+                        Host: <span class="font-semibold text-slate-500 truncate max-w-[80px]">{{ room.host.full_name }}</span>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 flex-wrap justify-end sm:justify-start lg:justify-end border-t border-slate-50 pt-2 lg:border-none lg:pt-0">
+            <!-- Buttons grouped for mobile -->
+            <div class="flex items-center gap-1.5 flex-1 sm:flex-initial">
+                {% if room.host_id == curr_user_id or is_admin %}
+                <a href="/attendance/{{ room.id }}/export" class="btn-ghost !p-1.5" title="Export Absensi" target="_blank">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 text-emerald-500 fill-current">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                    </svg>
+                </a>
+                {% endif %}
+
+                <button onclick="copyMeetingLink('{{ room.id }}')" class="btn-ghost !p-1.5" title="Salin Link">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" /></svg>
+                </button>
+
+                {% if is_admin or curr_user_id == room.host_id %}
+                <button hx-post="/rooms/{{ room.id }}/sync-link" hx-swap="none" class="btn-ghost !p-1.5" title="Ke Drive">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 text-blue-500 fill-current"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z" /></svg>
+                </button>
+                {% endif %}
+                
+                {% if is_admin or room.host_id == curr_user_id %}
+                <button onclick="openEditModal('{{ room.id }}', '{{ room.title }}', '{{ (room.scheduled_at + timedelta(hours=7)).isoformat() if room.scheduled_at else '' }}', '{{ room.duration }}')"
+                    class="btn-warning !p-1.5" title="Edit">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
+                </button>
+                {% endif %}
+            </div>
+
+            <a href="/room/{{ room.id }}"
+                class="btn-primary flex items-center justify-center gap-2 !px-4 !py-1.5 !text-[12px] flex-1 sm:flex-initial
+                    {% if room.status.value != 'active' and room.status != 'active' %}!from-slate-700 !to-slate-900 shadow-none{% endif %}"
+                style="{% if room.status.value != 'active' and room.status != 'active' %}background: #334155;{% endif %}">
+                <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+                </svg>
+                Join
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="card p-14 flex flex-col items-center justify-center text-center">
+    <div class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mb-5 border border-slate-100">
+        <svg viewBox="0 0 24 24" class="w-10 h-10 text-slate-300 fill-current">
+            <path
+                d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" />
+        </svg>
+    </div>
+    <h3 class="text-lg font-bold text-slate-800 font-jakarta mb-2">Belum Ada Room Tersedia</h3>
+    <p class="text-slate-400 text-sm max-w-xs">Hubungi guru atau TU untuk membuat jadwal meeting, atau buat room baru
+        jika Anda memiliki akses.</p>
+</div>
+{% endif %}

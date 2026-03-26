@@ -1,0 +1,88 @@
+<table class="w-full text-left">
+    <thead>
+        <tr class="bg-slate-50 border-b border-slate-100">
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Pengguna</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Role</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Status</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Terdaftar</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-50">
+        {% for u in users %}
+        <tr class="hover:bg-slate-50/60 transition-colors group">
+            <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-slate-100">
+                        <img src="/auth/avatar-proxy/{{ u.email }}" alt="{{ u.full_name }}"
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ u.full_name }}&background=6366f1&color=fff&size=96';"
+                            class="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                        <p class="font-semibold text-slate-900 text-sm">{{ u.full_name }}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">{{ u.email }}</p>
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider
+                    {% if u.role.value == 'ADMIN' %}bg-red-50 text-red-600 border border-red-100
+                    {% elif u.role.value == 'GURU' %}bg-emerald-50 text-emerald-700 border border-emerald-100
+                    {% elif u.role.value == 'TU' %}bg-amber-50 text-amber-700 border border-amber-100
+                    {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
+                    {{ u.role.value }}
+                </span>
+            </td>
+            <td class="px-6 py-4 text-center">
+                {% if u.id == user.id %}
+                <span
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold border border-indigo-100">
+                    <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>
+                    Anda
+                </span>
+                {% else %}
+                <div id="status-{{ u.id }}">
+                    <button hx-post="/admin/users/{{ u.id }}/toggle" hx-target="#status-{{ u.id }}" hx-swap="innerHTML"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all
+                            {% if u.is_active == 1 %}bg-green-50 text-green-700 border-green-100 hover:bg-green-100
+                            {% else %}bg-red-50 text-red-600 border-red-100 hover:bg-red-100{% endif %}">
+                        <span
+                            class="w-1.5 h-1.5 rounded-full {% if u.is_active == 1 %}bg-green-500{% else %}bg-red-400{% endif %}"></span>
+                        {{ 'Aktif' if u.is_active == 1 else 'Non-aktif' }}
+                    </button>
+                </div>
+                {% endif %}
+            </td>
+            <td class="px-6 py-4 text-right">
+                <span class="text-slate-400 text-xs font-medium">{{ u.created_at.strftime('%d %b %Y') }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-slate-50 flex items-center justify-between border-t border-slate-100">
+    <div>
+        {% if page > 1 %}
+        <button hx-get="/admin/users?page={{ page - 1 }}&search={{ search }}" hx-target="#user-list"
+            class="btn-secondary flex items-center gap-2 !px-4 !py-2 !text-sm">
+            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+            Sebelumnya
+        </button>
+        {% endif %}
+    </div>
+    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Halaman {{ page }}</span>
+    <div>
+        {% if has_next %}
+        <button hx-get="/admin/users?page={{ page + 1 }}&search={{ search }}" hx-target="#user-list"
+            class="btn-primary flex items-center gap-2 !px-4 !py-2 !text-sm">
+            Berikutnya
+            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+        </button>
+        {% endif %}
+    </div>
+</div>

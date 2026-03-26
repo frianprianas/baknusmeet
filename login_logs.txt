@@ -1,0 +1,100 @@
+﻿backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 660, in __call__
+backend-1  |     await self.middleware_stack(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 680, in app
+backend-1  |     await route.handle(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+backend-1  |     await self.app(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 130, in app
+backend-1  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+backend-1  |     raise exc
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+backend-1  |     await app(scope, receive, sender)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+backend-1  |     response = await f(request)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+backend-1  |     raw_response = await run_endpoint_function(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+backend-1  |     return await dependant.call(**values)
+backend-1  |   File "/backend/main.py", line 59, in login_page
+backend-1  |     return templates.TemplateResponse(request=request, name="login.html", context={})
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/templating.py", line 148, in TemplateResponse
+backend-1  |     template = self.get_template(name)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/templating.py", line 115, in get_template
+backend-1  |     return self.env.get_template(name)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 1016, in get_template
+backend-1  |     return self._load_template(name, globals)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 964, in _load_template
+backend-1  |     template = self.cache.get(cache_key)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/jinja2/utils.py", line 477, in get
+backend-1  |     return self[key]
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/jinja2/utils.py", line 515, in __getitem__
+backend-1  |     rv = self._mapping[key]
+backend-1  | TypeError: unhashable type: 'dict'
+backend-1  | INFO:     Will watch for changes in these directories: ['/']
+backend-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+backend-1  | INFO:     Started reloader process [1] using WatchFiles
+backend-1  | INFO:     Started server process [8]
+backend-1  | INFO:     Waiting for application startup.
+backend-1  | 2026-03-23 12:17:06,762 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+backend-1  | 2026-03-23 12:17:06,763 INFO sqlalchemy.engine.Engine [raw sql] ()
+backend-1  | 2026-03-23 12:17:06,825 INFO sqlalchemy.engine.Engine select current_schema()
+backend-1  | 2026-03-23 12:17:06,825 INFO sqlalchemy.engine.Engine [raw sql] ()
+backend-1  | 2026-03-23 12:17:06,838 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+backend-1  | 2026-03-23 12:17:06,839 INFO sqlalchemy.engine.Engine [raw sql] ()
+backend-1  | 2026-03-23 12:17:06,844 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:17:06,875 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:17:06,875 INFO sqlalchemy.engine.Engine [generated in 0.00041s] ('users', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:17:07,016 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:17:07,016 INFO sqlalchemy.engine.Engine [cached since 0.142s ago] ('rooms', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:17:07,018 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:17:07,018 INFO sqlalchemy.engine.Engine [cached since 0.1434s ago] ('participants', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:17:07,021 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_class.relname 
+backend-1  | FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+backend-1  | WHERE pg_catalog.pg_class.relname = $1::VARCHAR AND pg_catalog.pg_class.relkind = ANY (ARRAY[$2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != $7::VARCHAR
+backend-1  | 2026-03-23 12:17:07,022 INFO sqlalchemy.engine.Engine [cached since 0.1471s ago] ('sessions', 'r', 'p', 'f', 'v', 'm', 'pg_catalog')
+backend-1  | 2026-03-23 12:17:07,028 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_type.typname 
+backend-1  | FROM pg_catalog.pg_type JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_type.typnamespace 
+backend-1  | WHERE pg_catalog.pg_type.typname = $1::VARCHAR AND pg_catalog.pg_type_is_visible(pg_catalog.pg_type.oid) AND pg_catalog.pg_namespace.nspname != $2::VARCHAR
+backend-1  | 2026-03-23 12:17:07,029 INFO sqlalchemy.engine.Engine [generated in 0.00022s] ('userrole', 'pg_catalog')
+backend-1  | 2026-03-23 12:17:07,059 INFO sqlalchemy.engine.Engine SELECT pg_catalog.pg_type.typname 
+backend-1  | FROM pg_catalog.pg_type JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_type.typnamespace 
+backend-1  | WHERE pg_catalog.pg_type.typname = $1::VARCHAR AND pg_catalog.pg_type_is_visible(pg_catalog.pg_type.oid) AND pg_catalog.pg_namespace.nspname != $2::VARCHAR
+backend-1  | 2026-03-23 12:17:07,059 INFO sqlalchemy.engine.Engine [cached since 0.03072s ago] ('roomstatus', 'pg_catalog')
+backend-1  | INFO:     Application startup complete.
+backend-1  | 2026-03-23 12:17:07,061 INFO sqlalchemy.engine.Engine COMMIT
+backend-1  | INFO:     172.20.0.1:33846 - "HEAD /login HTTP/1.1" 405 Method Not Allowed
+backend-1  | INFO:     172.20.0.1:33846 - "GET /login HTTP/1.1" 200 OK
+backend-1  | INFO:     172.20.0.1:41564 - "GET / HTTP/1.1" 302 Found
+backend-1  | INFO:     172.20.0.1:41564 - "GET /login HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:20:36,659 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:20:36,680 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:20:36,681 INFO sqlalchemy.engine.Engine [generated in 0.00031s] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:20:36,797 INFO sqlalchemy.engine.Engine INSERT INTO users (email, full_name, role, created_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::userrole, $4::TIMESTAMP WITHOUT TIME ZONE) RETURNING users.id
+backend-1  | 2026-03-23 12:20:36,798 INFO sqlalchemy.engine.Engine [generated in 0.00092s] ('super@smk.baktinusantara666.sch.id', 'Super', 'SISWA', datetime.datetime(2026, 3, 23, 12, 20, 36, 797491))
+backend-1  | 2026-03-23 12:20:36,816 INFO sqlalchemy.engine.Engine COMMIT
+backend-1  | 2026-03-23 12:20:36,824 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:20:36,825 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.id = $1::INTEGER
+backend-1  | 2026-03-23 12:20:36,826 INFO sqlalchemy.engine.Engine [generated in 0.00024s] (1,)
+backend-1  | INFO:     172.20.0.1:41576 - "POST /auth/login HTTP/1.1" 303 See Other
+backend-1  | 2026-03-23 12:20:36,860 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:41576 - "GET /dashboard HTTP/1.1" 302 Found
+backend-1  | INFO:     172.20.0.1:41576 - "GET /login HTTP/1.1" 200 OK
+backend-1  | IMAP Auth Error: b'[AUTHENTICATIONFAILED] Authentication failed.'
+backend-1  | INFO:     172.20.0.1:41576 - "POST /auth/login HTTP/1.1" 401 Unauthorized
+backend-1  | INFO:     172.20.0.1:36246 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found

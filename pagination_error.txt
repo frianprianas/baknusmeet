@@ -1,0 +1,20 @@
+﻿backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+backend-1  |     response = await f(request)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+backend-1  |     raw_response = await run_endpoint_function(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+backend-1  |     return await dependant.call(**values)
+backend-1  |   File "/backend/routers/admin.py", line 74, in list_users_admin
+backend-1  |     query = select(User)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/templating.py", line 149, in TemplateResponse
+backend-1  |     return _TemplateResponse(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/starlette/templating.py", line 43, in __init__
+backend-1  |     content = template.render(context)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 1295, in render
+backend-1  |     self.environment.handle_exception()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+backend-1  |     raise rewrite_traceback_stack(source=source)
+backend-1  |   File "backend/templates/fragments/admin_user_list.html", line 55, in top-level template code
+backend-1  |     {% if page > 1 %}
+backend-1  | jinja2.exceptions.UndefinedError: 'page' is undefined
+backend-1  | INFO:     172.20.0.1:55726 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found

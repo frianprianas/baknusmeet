@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Login - BaknusMeet{% endblock %}
+{% block content %}
+<div class="min-h-screen grid lg:grid-cols-2 bg-white dark:bg-slate-900 overflow-hidden">
+    <!-- Left Visual Column with Illustration -->
+    <div class="hidden lg:flex flex-col justify-center items-center relative overflow-hidden p-20">
+        <!-- Main Background Illustration -->
+        <div class="absolute inset-0 z-0">
+            <img src="/static/gbr.png" alt="Illustration" class="w-full h-full object-cover">
+            <!-- Overlay for readability -->
+            <div class="absolute inset-0 bg-blue-600/40 backdrop-blur-[2px]"></div>
+        </div>
+
+        <div class="relative z-10 text-center">
+            <div class="w-24 h-24 flex items-center justify-center mx-auto mb-8 overflow-hidden">
+                <img src="/static/GM.png" alt="Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-5xl font-extrabold text-white mb-6 leading-tight font-outfit">
+                BaknusMeet <br />
+                <span class="text-blue-200">Official Portal</span>
+            </h1>
+            <p class="text-blue-100 text-xl font-medium max-w-md">
+                Platform konferensi video aman untuk civitas Bakti Nusantara 666. Masuk menggunakan akun Mailcow Anda.
+            </p>
+        </div>
+    </div>
+
+    <!-- Login Form Column -->
+    <div class="flex flex-col justify-center items-center p-8 bg-slate-50 dark:bg-slate-900">
+        <div
+            class="w-full max-w-md p-10 bg-white dark:bg-slate-800 rounded-[3rem] shadow-2xl shadow-blue-100/50 dark:shadow-blue-900/20 border border-transparent dark:border-slate-700">
+            <div class="mb-10 text-center lg:text-left">
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2 font-outfit uppercase tracking-tight">
+                    Selamat Datang
+                </h2>
+                <p class="text-slate-500 dark:text-slate-400">Silakan login dengan kredensial sekolah anda.</p>
+            </div>
+
+            <form action="/auth/login?{{ request.query_params }}" method="POST" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Username /
+                        Email</label>
+                    <div class="relative group">
+                        <input type="text" name="email" required placeholder="Contoh: frian (tanpa @domain)"
+                            class="input-field" />
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Password</label>
+                    <div class="relative group">
+                        <input type="password" name="password" required placeholder="••••••••" class="input-field" />
+                    </div>
+                </div>
+
+                {% if error %}
+                <div
+                    class="p-4 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-sm rounded-2xl font-semibold border border-red-100 dark:border-red-500/20">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                <button type="submit" id="submit-btn"
+                    class="w-full btn-primary flex items-center justify-center gap-2 group">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current">
+                        <path
+                            d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z" />
+                    </svg>
+                    <span>Masuk Sekarang</span>
+                </button>
+            </form>
+
+            <div class="mt-10 text-center">
+                <p class="text-slate-400 text-xs font-medium uppercase tracking-tighter italic">
+                    &copy; 2026 SMK Bakti Nusantara 666. <br />
+                    Secure IMAP Authentication via Mailcow.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple script to handle redirect after login if it's successful JSON response
+    // Or we can just let it be a standard redirect from the backend.
+    document.querySelector('form').onsubmit = async (e) => {
+        const btn = document.getElementById('submit-btn');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<span class="animate-spin mr-2">◌</span> Memproses...';
+        btn.disabled = true;
+    };
+</script>
+{% endblock %}

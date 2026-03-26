@@ -1,0 +1,20 @@
+﻿backend-1  |   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 79, in serve
+backend-1  |     await self._serve(sockets)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/server.py", line 86, in _serve
+backend-1  |     config.load()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/config.py", line 441, in load
+backend-1  |     self.loaded_app = import_from_string(self.app)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/uvicorn/importer.py", line 19, in import_from_string
+backend-1  |     module = importlib.import_module(module_str)
+backend-1  |   File "/usr/local/lib/python3.10/importlib/__init__.py", line 126, in import_module
+backend-1  |     return _bootstrap._gcd_import(name[level:], package, level)
+backend-1  |   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+backend-1  |   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+backend-1  |   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+backend-1  |   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+backend-1  |   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+backend-1  |   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+backend-1  |   File "/backend/main.py", line 54, in <module>
+backend-1  |     async def admin_management_page(request: Request, current_user: User = Depends(get_current_user)):
+backend-1  | NameError: name 'User' is not defined

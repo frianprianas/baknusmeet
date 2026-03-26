@@ -1,0 +1,50 @@
+﻿backend-1  |     self.session.flush()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4331, in flush
+backend-1  |     self._flush(objects)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4466, in _flush
+backend-1  |     with util.safe_reraise():
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 121, in __exit__
+backend-1  |     raise exc_value.with_traceback(exc_tb)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4427, in _flush
+backend-1  |     flush_context.execute()
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+backend-1  |     rec.execute(self)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+backend-1  |     util.preloaded.orm_persistence.save_obj(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 85, in save_obj
+backend-1  |     _emit_update_statements(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 912, in _emit_update_statements
+backend-1  |     c = connection.execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+backend-1  |     return meth(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+backend-1  |     return connection._execute_clauseelement(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+backend-1  |     ret = self._execute_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+backend-1  |     return self._exec_single_context(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+backend-1  |     self._handle_dbapi_exception(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+backend-1  |     raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+backend-1  |     self.dialect.do_execute(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+backend-1  |     cursor.execute(statement, parameters)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+backend-1  |     self._adapt_connection.await_(
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+backend-1  |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+backend-1  |     value = await result
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+backend-1  |     self._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+backend-1  |     self._adapt_connection._handle_exception(error)
+backend-1  |   File "/usr/local/lib/python3.10/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+backend-1  |     raise translated_error from error
+backend-1  | sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.InvalidTextRepresentationError'>: invalid input value for enum userrole: "ADMIN"
+backend-1  | [SQL: UPDATE users SET role=$1::userrole WHERE users.id = $2::INTEGER]
+backend-1  | [parameters: ('ADMIN', 1)]
+backend-1  | (Background on this error at: https://sqlalche.me/e/20/dbapi)
+backend-1  | INFO:     172.20.0.1:53828 - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 Not Found

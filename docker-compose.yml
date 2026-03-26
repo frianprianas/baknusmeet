@@ -1,0 +1,92 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: baknusmeet
+      POSTGRES_USER: baknus
+      POSTGRES_PASSWORD: baknus_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    restart: always
+    env_file: .env # Read from .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://baknus:baknus_password@db/baknusmeet
+      - REDIS_URL=redis://redis:6379
+      - JITSI_PUBLIC_URL=${JITSI_PUBLIC_URL}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - db
+      - redis
+
+  # Jitsi Section
+  prosody:
+    image: jitsi/prosody:stable
+    restart: always
+    env_file: jitsi.env
+    ports:
+      - "5280:5280"
+    networks:
+      default:
+        aliases:
+          - prosody
+    volumes:
+      - ./jitsi-config/prosody:/config
+
+  jicofo:
+    image: jitsi/jicofo:stable
+    restart: always
+    env_file: jitsi.env
+    depends_on:
+      - prosody
+    volumes:
+      - ./jitsi-config/jicofo:/config
+
+  jvb:
+    image: jitsi/jvb:stable
+    restart: always
+    env_file: jitsi.env
+    ports:
+      - "10000:10000/udp"
+      - "4443:4443"
+    depends_on:
+      - prosody
+    volumes:
+      - ./jitsi-config/jvb:/config
+
+  web:
+    image: jitsi/web:stable
+    restart: always
+    env_file: jitsi.env
+    ports:
+      - "8080:80"
+      # - "8443:443" # Disabled due to conflict with IIS 8443 SSL Proxy
+    depends_on:
+      - prosody
+      - jicofo
+    environment:
+      - ENABLE_WHITEBOARD=1
+      - SHOW_JITSI_WATERMARK=0
+      - JITSI_WATERMARK_LINK=
+      - BRAND_WATERMARK_LINK=
+      - APP_NAME=BaknusMeet
+      - NATIVE_APP_NAME=BaknusMeet
+    volumes:
+      - ./jitsi-config/web:/config
+
+volumes:
+  postgres_data:

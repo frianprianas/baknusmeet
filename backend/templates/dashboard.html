@@ -1,0 +1,543 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - BaknusMeet{% endblock %}
+{% block content %}
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <!-- Logo -->
+    <div class="sidebar-logo">
+        <div class="sidebar-logo-icon overflow-hidden">
+            <img src="/static/GM.png" alt="Logo" class="w-full h-full object-contain">
+        </div>
+        <div>
+            <p class="text-slate-900 dark:text-white font-bold text-base font-jakarta tracking-wide">BaknusMeet</p>
+            <p class="text-slate-400 text-[10px] font-medium uppercase tracking-widest">Portal Video Konferensi</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+        <p class="sidebar-section-title">Menu Utama</p>
+        <a href="/dashboard" class="nav-item active" id="nav-dashboard">
+            <svg viewBox="0 0 24 24" class="fill-current">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+            </svg>
+            Dashboard
+        </a>
+
+        {% if user.role.value in ['ADMIN', 'GURU', 'TU'] %}
+        <a href="#" class="nav-item"
+            onclick="document.getElementById('create-modal').classList.remove('hidden'); return false;">
+            <svg viewBox="0 0 24 24" class="fill-current">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Buat Room Baru
+        </a>
+        {% endif %}
+
+        {% if user.role.value == 'ADMIN' %}
+        <p class="sidebar-section-title">Administrasi</p>
+        <a href="/admin/management" class="nav-item">
+            <svg viewBox="0 0 24 24" class="fill-current">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            Panel Admin
+        </a>
+        <a href="/admin/management" class="nav-item">
+            <svg viewBox="0 0 24 24" class="fill-current">
+                <path
+                    d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+            </svg>
+            Kelola Pengguna
+        </a>
+        {% endif %}
+
+        <p class="sidebar-section-title">Akun</p>
+        <a href="/auth/logout" class="nav-item" style="color: #f87171;"
+            onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background=''">
+            <svg viewBox="0 0 24 24" class="fill-current">
+                <path
+                    d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+            </svg>
+            Keluar
+        </a>
+    </nav>
+
+    <!-- User Profile -->
+    <div class="sidebar-user">
+        <div class="sidebar-avatar">
+            <img src="/auth/avatar-proxy/{{ user.email }}" alt="{{ user.full_name }}"
+                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ user.full_name }}&background=3b82f6&color=fff&size=128';"
+                class="w-full h-full object-cover" />
+        </div>
+        <div class="sidebar-user-info">
+            <p class="sidebar-user-name">{{ user.full_name }}</p>
+            <p class="sidebar-user-role role-{{ user.role.value | lower }}">{{ user.role.value }}</p>
+        </div>
+        <a href="/auth/logout"
+            class="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Logout">
+            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+                <path
+                    d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+            </svg>
+        </a>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Topbar -->
+    <header class="topbar">
+        <!-- Mobile menu button -->
+        <button class="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 mr-3"
+            onclick="document.getElementById('sidebar').classList.toggle('open')">
+            <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
+        </button>
+
+        <div>
+            <h1 class="text-xl font-bold text-slate-900 font-jakarta">Dashboard Meeting</h1>
+            <p class="text-slate-400 text-xs mt-0.5">Selamat datang kembali, <span
+                    class="font-semibold text-slate-600">{{ user.full_name }}</span></p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Theme Toggle -->
+            <button onclick="toggleTheme()"
+                class="p-2 rounded-xl bg-slate-50 border border-slate-100 dark:bg-slate-800 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all focus:outline-none"
+                title="Ubah Tema">
+                <svg class="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <svg class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
+
+            <!-- Status pill -->
+            <div class="hidden sm:flex items-center gap-2 px-3 py-2 bg-green-50 rounded-xl border border-green-100">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-green-700 text-xs font-semibold">Sistem Online</span>
+            </div>
+
+            <!-- Role badge -->
+            <div class="px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider
+                {% if user.role.value == 'ADMIN' %}bg-red-50 text-red-600 border border-red-100
+                {% elif user.role.value == 'GURU' %}bg-emerald-50 text-emerald-600 border border-emerald-100
+                {% elif user.role.value == 'TU' %}bg-amber-50 text-amber-600 border border-amber-100
+                {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
+                {{ user.role.value }}
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-area">
+
+        <!-- Stats Row (only for admin/guru/tu) -->
+        {% if user.role.value in ['ADMIN', 'GURU', 'TU'] %}
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+            <div class="card-stat flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" class="w-6 h-6 text-blue-600 fill-current">
+                        <path
+                            d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-slate-900 font-jakarta" id="stat-total-rooms">-</p>
+                    <p class="text-slate-400 text-xs font-medium mt-0.5">Total Room</p>
+                </div>
+            </div>
+            <div class="card-stat flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" class="w-6 h-6 text-green-600 fill-current">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-slate-900 font-jakarta" id="stat-active-rooms">-</p>
+                    <p class="text-slate-400 text-xs font-medium mt-0.5">Sedang Aktif</p>
+                </div>
+            </div>
+            <div class="card-stat flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" class="w-6 h-6 text-violet-600 fill-current">
+                        <path
+                            d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-900 font-jakarta">120 Menit</p>
+                    <p class="text-slate-400 text-xs font-medium mt-0.5">Maks. Durasi</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+            <!-- Room List (spans 2/3) -->
+            <div class="xl:col-span-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 font-jakarta">Daftar Room Meeting</h2>
+                        <p class="text-slate-400 text-xs mt-0.5">Diperbarui otomatis setiap 10 detik</p>
+                    </div>
+                    {% if user.role.value in ['ADMIN', 'GURU', 'TU'] %}
+                    <button onclick="document.getElementById('create-modal').classList.remove('hidden')"
+                        class="btn-primary flex items-center gap-2 text-sm">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                        </svg>
+                        Buat Room
+                    </button>
+                    {% endif %}
+                </div>
+
+                <div id="room-list" hx-get="/rooms/list" hx-trigger="load, every 10s" class="space-y-3">
+                    <div class="card p-8 flex items-center justify-center">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-8 h-8 border-3 border-blue-400 border-t-transparent rounded-full animate-spin"
+                                style="border-width:3px"></div>
+                            <p class="text-slate-400 text-sm">Memuat daftar room...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="xl:col-span-1 space-y-4">
+                <!-- User Profile Card -->
+                <div class="card p-5">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 ring-2 ring-slate-100">
+                            <img src="/auth/avatar-proxy/{{ user.email }}" alt="{{ user.full_name }}"
+                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ user.full_name }}&background=6366f1&color=fff&size=128';"
+                                class="w-full h-full object-cover" />
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900 text-base font-jakarta">{{ user.full_name }}</p>
+                            <p class="text-xs font-semibold uppercase tracking-widest mt-1
+                                {% if user.role.value == 'ADMIN' %}text-red-500
+                                {% elif user.role.value == 'GURU' %}text-emerald-500
+                                {% elif user.role.value == 'TU' %}text-amber-500
+                                {% else %}text-blue-500{% endif %}">{{ user.role.value }}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 text-slate-400 fill-current flex-shrink-0">
+                                <path
+                                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                            </svg>
+                            <span class="text-slate-600 text-xs font-medium truncate">{{ user.email }}</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-green-50 rounded-xl">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+                            <span class="text-green-700 text-xs font-semibold">Mailcow Sinkron & Aktif</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Info Card -->
+                <div class="card p-5">
+                    <h3 class="font-bold text-slate-900 text-sm mb-4 font-jakarta">Panduan Cepat</h3>
+                    <div class="space-y-3">
+                        {% if user.role.value in ['ADMIN', 'GURU', 'TU'] %}
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-blue-600 fill-current">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-800 text-xs">Buat Room</p>
+                                <p class="text-slate-400 text-xs mt-0.5">Klik "Buat Room" untuk memulai meeting baru</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-7 h-7 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-violet-600 fill-current">
+                                    <path
+                                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-800 text-xs">Salin Link</p>
+                                <p class="text-slate-400 text-xs mt-0.5">Klik ikon salin untuk bagikan link meeting</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-7 h-7 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-green-600 fill-current">
+                                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-800 text-xs">Join Meeting</p>
+                                <p class="text-slate-400 text-xs mt-0.5">Klik "Join" untuk masuk ke ruang meeting</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if user.role.value == 'ADMIN' %}
+                <!-- Admin Quick Actions -->
+                <div class="card p-5">
+                    <h3 class="font-bold text-slate-900 text-sm mb-4 font-jakarta">Aksi Admin</h3>
+                    <div class="space-y-2">
+                        <a href="/admin/management"
+                            class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-all group">
+                            <div
+                                class="w-8 h-8 bg-red-100 rounded-xl flex items-center justify-center group-hover:bg-red-200 transition-all">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-red-600 fill-current">
+                                    <path
+                                        d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                                </svg>
+                            </div>
+                            <span class="text-slate-700 text-sm font-medium">Kelola Pengguna</span>
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 text-slate-300 fill-current ml-auto">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Create Room Modal -->
+<div id="create-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="modal-backdrop absolute inset-0"
+        onclick="document.getElementById('create-modal').classList.add('hidden')"></div>
+    <div class="modal-card relative animate-slide-in" style="max-width:520px;">
+        <div class="flex items-center gap-4 mb-6">
+            <div
+                class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 text-white fill-current">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 font-jakarta">Buat Room Baru</h3>
+                <p class="text-slate-400 text-sm">Isi detail jadwal pertemuan</p>
+            </div>
+        </div>
+        <form hx-post="/rooms/" hx-target="#room-list" hx-swap="innerHTML"
+            onsubmit="document.getElementById('create-modal').classList.add('hidden')" class="space-y-4">
+            <!-- Judul -->
+            <div>
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Judul
+                    Meeting</label>
+                <input type="text" name="title" required placeholder="Contoh: Rapat Koordinasi Kurikulum"
+                    class="input-field" />
+            </div>
+            <!-- Tanggal & Jam -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 inline-block mr-1 fill-current text-blue-500">
+                            <path
+                                d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z" />
+                        </svg>
+                        Tanggal
+                    </label>
+                    <input type="date" name="scheduled_date" id="cr-date" required class="input-field !text-sm" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 inline-block mr-1 fill-current text-blue-500">
+                            <path
+                                d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
+                        </svg>
+                        Jam Mulai (WIB)
+                    </label>
+                    <input type="time" name="scheduled_time" id="cr-time" required class="input-field !text-sm"
+                        step="300" />
+                </div>
+            </div>
+            <!-- Durasi -->
+            <div>
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Durasi
+                    Meeting</label>
+                <select name="duration" class="input-field !text-sm">
+                    <option value="30">30 menit</option>
+                    <option value="60">1 jam</option>
+                    <option value="90">1,5 jam</option>
+                    <option value="120" selected>2 jam (maksimal)</option>
+                </select>
+            </div>
+
+            <!-- Moderator (Admin Only) -->
+            {% if user.role.value == 'ADMIN' %}
+            <div>
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Pilih Moderator
+                    (Guru/TU)</label>
+                <select name="host_id" class="input-field !text-sm">
+                    <option value="{{ user.id }}">Diri Sendiri (Admin)</option>
+                    {% for mod in moderators %}
+                    <option value="{{ mod.id }}">{{ mod.full_name }} ({{ mod.role.value }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            <!-- Info -->
+            <div class="flex items-start gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                <svg viewBox="0 0 24 24" class="w-4 h-4 text-amber-500 fill-current flex-shrink-0 mt-0.5">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                <p class="text-amber-700 text-xs">Tidak bisa membuat room jika ada room lain yang jadwalnya bersamaan
+                    atau overlap.</p>
+            </div>
+            <!-- Hidden combined datetime field -->
+            <input type="hidden" name="scheduled_at_str" id="cr-datetime-combined" />
+            <div class="flex gap-3 pt-1">
+                <button type="button" onclick="document.getElementById('create-modal').classList.add('hidden')"
+                    class="btn-secondary flex-1">Batal</button>
+                <button type="submit" onclick="combineDatetime('cr-date','cr-time','cr-datetime-combined')"
+                    class="btn-primary flex-1">
+                    Buat & Jadwalkan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Room Modal -->
+<div id="edit-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="modal-backdrop absolute inset-0" onclick="closeEditModal()"></div>
+    <div class="modal-card relative animate-slide-in" style="max-width:520px;">
+        <div class="flex items-center gap-4 mb-6">
+            <div
+                class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-200">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 text-white fill-current">
+                    <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 font-jakarta">Edit Room</h3>
+                <p class="text-slate-400 text-sm">Ubah detail jadwal meeting</p>
+            </div>
+        </div>
+        <form id="edit-form" hx-put="" hx-target="#room-list" hx-swap="innerHTML"
+            onsubmit="closeEditModal(); combineDatetime('edit-date','edit-time','edit-datetime-combined')"
+            class="space-y-4">
+            <div>
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Judul
+                    Meeting</label>
+                <input type="text" id="edit-title" name="title" required class="input-field" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label
+                        class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Tanggal</label>
+                    <input type="date" name="scheduled_date" id="edit-date" class="input-field !text-sm" />
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Jam Mulai
+                        (WIB)</label>
+                    <input type="time" name="scheduled_time" id="edit-time" class="input-field !text-sm" step="300" />
+                </div>
+            </div>
+            <div>
+                <label class="text-xs font-bold text-slate-700 uppercase tracking-widest block mb-1.5">Durasi
+                    Meeting</label>
+                <select name="duration" id="edit-duration" class="input-field !text-sm">
+                    <option value="30">30 menit</option>
+                    <option value="60">1 jam</option>
+                    <option value="90">1,5 jam</option>
+                    <option value="120" selected>2 jam (maksimal)</option>
+                </select>
+            </div>
+            <input type="hidden" name="scheduled_at_str" id="edit-datetime-combined" />
+            <div class="flex gap-3 pt-1">
+                <button type="button" onclick="closeEditModal()" class="btn-secondary flex-1">Batal</button>
+                <button type="submit" class="btn-primary flex-1"
+                    style="background: linear-gradient(135deg, #f59e0b, #ea580c); box-shadow: 0 4px 12px rgba(245,158,11,0.35);">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Combine date + time inputs into hidden "YYYY-MM-DDTHH:MM" field
+    function combineDatetime(dateId, timeId, targetId) {
+        const d = document.getElementById(dateId).value;
+        const t = document.getElementById(timeId).value;
+        if (d && t) {
+            document.getElementById(targetId).value = d + 'T' + t;
+        }
+    }
+
+    function openEditModal(roomId, currentTitle, scheduledAt, duration) {
+        document.getElementById('edit-title').value = currentTitle;
+        document.getElementById('edit-form').setAttribute('hx-put', `/rooms/${roomId}`);
+        htmx.process(document.getElementById('edit-form'));
+
+        // Pre-fill date & time if available
+        if (scheduledAt) {
+            const dt = new Date(scheduledAt);
+            const y = dt.getFullYear();
+            const mo = String(dt.getMonth() + 1).padStart(2, '0');
+            const d = String(dt.getDate()).padStart(2, '0');
+            const h = String(dt.getHours()).padStart(2, '0');
+            const mi = String(dt.getMinutes()).padStart(2, '0');
+
+            document.getElementById('edit-date').value = `${y}-${mo}-${d}`;
+            document.getElementById('edit-time').value = `${h}:${mi}`;
+        }
+        if (duration) {
+            document.getElementById('edit-duration').value = duration;
+        }
+        document.getElementById('edit-modal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    // Set min date to today for create modal
+    document.addEventListener('DOMContentLoaded', function () {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const d = String(today.getDate()).padStart(2, '0');
+        const dateInput = document.getElementById('cr-date');
+        if (dateInput) dateInput.min = `${y}-${m}-${d}`;
+    });
+
+    // Update stats after room list loads
+    htmx.on('#room-list', 'htmx:afterSwap', function () {
+        const cards = document.querySelectorAll('.room-card');
+        const active = document.querySelectorAll('.room-card[data-status="active"]');
+        const el1 = document.getElementById('stat-total-rooms');
+        const el2 = document.getElementById('stat-active-rooms');
+        if (el1) el1.textContent = cards.length;
+        if (el2) el2.textContent = active.length;
+
+        // Show toast_error if present
+        const errEl = document.getElementById('toast-error-msg');
+        if (errEl) {
+            showToast('⚠️ ' + errEl.dataset.msg, 'error');
+        }
+    });
+</script>
+
+{% endblock %}

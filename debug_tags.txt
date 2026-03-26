@@ -1,0 +1,100 @@
+﻿backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:29:59,336 INFO sqlalchemy.engine.Engine [cached since 74.32s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:29:59,339 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:29:59,340 INFO sqlalchemy.engine.Engine [cached since 74.29s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:39090 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:29:59,372 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:30:09,339 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:30:09,340 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:30:09,340 INFO sqlalchemy.engine.Engine [cached since 84.32s ago] ('super@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:30:09,344 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:30:09,344 INFO sqlalchemy.engine.Engine [cached since 84.29s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:39098 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:30:09,365 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | INFO:     172.20.0.1:39098 - "GET /auth/logout HTTP/1.1" 302 Found
+backend-1  | INFO:     172.20.0.1:39098 - "GET /login HTTP/1.1" 200 OK
+backend-1  | Mailcow API credentials not configured.
+backend-1  | 2026-03-23 12:30:38,844 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:30:38,845 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:30:38,845 INFO sqlalchemy.engine.Engine [cached since 113.8s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:30:38,851 INFO sqlalchemy.engine.Engine INSERT INTO users (email, full_name, role, created_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::userrole, $4::TIMESTAMP WITHOUT TIME ZONE) RETURNING users.id
+backend-1  | 2026-03-23 12:30:38,851 INFO sqlalchemy.engine.Engine [generated in 0.00025s] ('frian_p@smk.baktinusantara666.sch.id', 'Frian_P', 'SISWA', datetime.datetime(2026, 3, 23, 12, 30, 38, 851113))
+backend-1  | 2026-03-23 12:30:38,858 INFO sqlalchemy.engine.Engine COMMIT
+backend-1  | 2026-03-23 12:30:38,861 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:30:38,862 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.id = $1::INTEGER
+backend-1  | 2026-03-23 12:30:38,862 INFO sqlalchemy.engine.Engine [cached since 39.75s ago] (2,)
+backend-1  | INFO:     172.20.0.1:48154 - "POST /auth/login HTTP/1.1" 303 See Other
+backend-1  | 2026-03-23 12:30:38,866 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:30:38,873 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:30:38,873 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:30:38,873 INFO sqlalchemy.engine.Engine [cached since 113.9s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | INFO:     172.20.0.1:48154 - "GET /dashboard HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:30:38,880 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:30:39,007 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:30:39,008 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:30:39,008 INFO sqlalchemy.engine.Engine [cached since 114s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:30:39,012 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:30:39,013 INFO sqlalchemy.engine.Engine [cached since 114s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:48154 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:30:39,039 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:30:49,982 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:30:49,982 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:30:49,982 INFO sqlalchemy.engine.Engine [cached since 125s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:30:49,986 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:30:49,986 INFO sqlalchemy.engine.Engine [cached since 124.9s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:51170 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:30:49,999 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:31:00,981 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:31:00,981 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:31:00,981 INFO sqlalchemy.engine.Engine [cached since 136s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:31:00,985 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:31:00,985 INFO sqlalchemy.engine.Engine [cached since 135.9s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:59318 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:31:01,005 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:31:11,985 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:31:11,986 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:31:11,986 INFO sqlalchemy.engine.Engine [cached since 147s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:31:11,993 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:31:11,993 INFO sqlalchemy.engine.Engine [cached since 146.9s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:50476 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:31:12,007 INFO sqlalchemy.engine.Engine ROLLBACK
+backend-1  | 2026-03-23 12:31:22,986 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+backend-1  | 2026-03-23 12:31:22,986 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.created_at 
+backend-1  | FROM users 
+backend-1  | WHERE users.email = $1::VARCHAR
+backend-1  | 2026-03-23 12:31:22,986 INFO sqlalchemy.engine.Engine [cached since 158s ago] ('frian_p@smk.baktinusantara666.sch.id',)
+backend-1  | 2026-03-23 12:31:22,991 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+backend-1  | FROM rooms 
+backend-1  | WHERE rooms.status != $1::roomstatus ORDER BY rooms.created_at DESC
+backend-1  | 2026-03-23 12:31:22,992 INFO sqlalchemy.engine.Engine [cached since 157.9s ago] ('ENDED',)
+backend-1  | INFO:     172.20.0.1:49440 - "GET /rooms/list HTTP/1.1" 200 OK
+backend-1  | 2026-03-23 12:31:23,007 INFO sqlalchemy.engine.Engine ROLLBACK

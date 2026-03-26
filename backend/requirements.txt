@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]
+asyncpg
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+redis[hiredis]
+aioredis
+pydantic
+pydantic-settings
+email-validator
+httpx
+jinja2
+pandas
+openpyxl

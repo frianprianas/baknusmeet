@@ -1,0 +1,71 @@
+nce-badge HTTP/1.1" 200 OK
+2026-03-23 16:11:45,075 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.20.0.1:57644 - "GET /rooms/list HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/usr/local/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/fastapi/applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/usr/local/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/middleware/cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 130, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 116, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 670, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/site-packages/fastapi/routing.py", line 324, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/backend/routers/rooms.py", line 60, in list_rooms_htmx
+  File "/usr/local/lib/python3.10/site-packages/starlette/templating.py", line 149, in TemplateResponse
+    return _TemplateResponse(
+  File "/usr/local/lib/python3.10/site-packages/starlette/templating.py", line 43, in __init__
+    content = template.render(context)
+  File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "backend/templates/fragments/room_list.html", line 48, in top-level template code
+    {% if is_admin or room.host_id == user.id %}
+  File "/usr/local/lib/python3.10/site-packages/jinja2/environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'user' is undefined
+2026-03-23 16:12:45,053 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-23 16:12:45,066 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.full_name, users.role, users.is_active, users.created_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-03-23 16:12:45,067 INFO sqlalchemy.engine.Engine [cached since 1914s ago] ('super@smk.baktinusantara666.sch.id',)
+2026-03-23 16:12:45,189 INFO sqlalchemy.engine.Engine SELECT rooms.id, rooms.title, rooms.host_id, rooms.jitsi_room_id, rooms.scheduled_at, rooms.duration, rooms.status, rooms.created_at 
+FROM rooms 
+WHERE rooms.host_id = $1::INTEGER ORDER BY rooms.created_at DESC
+2026-03-23 16:12:45,189 INFO sqlalchemy.engine.Engine [cached since 1913s ago] (1,)
+INFO:     172.20.0.1:53236 - "GET /participants/1/presence-badge HTTP/1.1" 200 OK
+2026-03-23 16:12:45,252 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.20.0.1:53226 - "GET /rooms/list HTTP/1.1" 500 Internal Server Error
