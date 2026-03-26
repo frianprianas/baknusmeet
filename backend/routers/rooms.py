@@ -282,7 +282,7 @@ async def get_room_info(
         exp_timestamp = int((now + timedelta(minutes=120)).timestamp())
 
     # Fix: Aggressive role check using raw string value
-    user_role_str = str(current_user.role.value if hasattr(current_user.role, 'value') else current_user.role)
+    user_role_str = str(current_user.role.value if hasattr(current_user.role, 'value') else current_user.role).upper()
     is_moderator = user_role_str in ["ADMIN", "GURU", "TU"]
     print(f"\n[JITSI SECURITY] User: {current_user.email} | Detected Role: {user_role_str} | Is Moderator: {is_moderator}")
 
@@ -361,12 +361,12 @@ async def sync_link_to_drive(
         return Response(
             content=f"Gagal simpan link ke Drive: {sync_res['error']}",
             status_code=500,
-            headers={"HX-Trigger": '{"showToast": {"msg": "❌ Gagal simpan link ke Drive", "type": "error"}}'}
+            headers={"HX-Trigger": '{"showToast": {"msg": "Gagal simpan link ke Drive", "type": "error"}}'}
         )
         
     return Response(
         content="Success",
-        headers={"HX-Trigger": '{"showToast": {"msg": "✅ Link Meeting berhasil disimpan ke BaknusDrive!", "type": "success"}}'}
+        headers={"HX-Trigger": '{"showToast": {"msg": "Link Meeting berhasil disimpan ke BaknusDrive!", "type": "success"}}'}
     )
 
 
@@ -440,10 +440,14 @@ async def save_screenshot(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+from pydantic import BaseModel
+class ChatRequest(BaseModel):
+    chat_content: str
+
 @router.post("/{room_id}/save-chat")
 async def save_chat_history(
     room_id: int,
-    data: dict,  # Expects { "chat_content": "..." }
+    data: ChatRequest,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -460,8 +464,7 @@ async def save_chat_history(
     if not room:
         raise HTTPException(status_code=404, detail="Room tidak ditemukan")
 
-    chat_content = data.get("chat_content", "")
-    if not chat_content:
+    if not data.chat_content:
         raise HTTPException(status_code=400, detail="Riwayat chat kosong")
 
     # Generate filename with timestamp
@@ -470,20 +473,19 @@ async def save_chat_history(
     safe_title = "".join([c if c.isalnum() else "_" for c in room.title])
     # Use prefix in filename to force subfolder creation (if supported by Drive)
     # Most systems interpret '/' in filename as a subdirectory
-    file_name = f"Chat/CHAT_{safe_title}_{timestamp}.txt"
+    file_name = f"CHAT_{safe_title}_{timestamp}.txt"
 
     # Upload to BaknusDrive
     try:
         # Ensure folder exists
         await setup_meet_folder(teacher_email=current_user.email)
         
-        file_bytes = chat_content.encode('utf-8')
+        file_bytes = data.chat_content.encode('utf-8')
         sync_res = await upload_file_to_drive(
             file_name=file_name,
             file_content=file_bytes,
             teacher_email=current_user.email,
-            category="meet",
-            folder="Chat"
+            category="meet"
         )
 
         # Broad success: if sync_res is returned and not an explicit error dict with status >= 400

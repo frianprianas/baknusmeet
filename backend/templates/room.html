@@ -52,27 +52,74 @@
                 </svg>
                 <span class="hidden sm:inline">Simpan Chat</span>
             </button>
-            <!-- Manual Attendance Sync (Moderator Only) -->
-            <button hx-post="/attendance/{{ room_id }}/sync-active" hx-swap="none"
+            <!-- Manual Attendance Recap (Moderator Only) -->
+            <button id="sync-btn" hx-post="/attendance/{{ room_id }}/sync-drive" hx-swap="none"
                 class="px-3 sm:px-5 py-2 sm:py-2.5 bg-black/40 backdrop-blur-2xl border border-white/20 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xl transition-all flex items-center gap-2 active:scale-95 group">
-                <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-white/70 group-hover:text-emerald-400 transition-colors">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                </svg>
-                <span class="hidden sm:inline">Absen</span>
+                <span class="icon-normal flex items-center gap-2">
+                    <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current text-white/70 group-hover:text-emerald-400 transition-colors">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                    </svg>
+                    <span class="hidden sm:inline">Simpan Absen</span>
+                </span>
+                <span class="icon-loading hidden flex items-center gap-2">
+                    <div class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span>Proses...</span>
+                </span>
             </button>
             {% endif %}
 
-            <!-- Presence Count -->
-            <div id="presence-badge" hx-get="/participants/{{ room_id }}/presence-badge" hx-trigger="load, every 10s"
+            <!-- Dynamic Presence Count (Powered by Jitsi API) -->
+            <div id="presence-badge"
                 class="px-3 sm:px-4 py-2 sm:py-2.5 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-lg sm:rounded-xl flex items-center gap-2 shadow-2xl min-w-[70px] sm:min-w-[110px] justify-center">
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-                <span class="text-[9px] sm:text-[10px] font-black text-blue-100 uppercase tracking-widest leading-none">Prtcpnts</span>
+                <span id="presence-count" class="text-[9px] sm:text-[10px] font-black text-blue-100 uppercase tracking-widest leading-none">1 PESERTA</span>
             </div>
         </div>
 
         <!-- Right Section: Balanced empty space for visual alignment -->
-        <div class="flex-1"></div>
+        <div class="flex-1 flex justify-end pointer-events-auto">
+            {% if user.role.value == 'SISWA' %}
+            <button onclick="leaveMeeting()"
+                class="px-3 sm:px-4 py-2 sm:py-2.5 bg-red-500/20 hover:bg-red-500/40 backdrop-blur-2xl border border-red-500/30 text-red-100 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-black shadow-2xl transition-all flex items-center gap-2 active:scale-95">
+                <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                <span class="hidden sm:inline">Keluar</span>
+            </button>
+            <script>
+                window.leaveMeeting = () => {
+                    if(window.jitsiApi) {
+                        try { window.jitsiApi.executeCommand('hangup'); } catch(e){}
+                        setTimeout(() => window.location.href = "/dashboard", 300);
+                    } else {
+                        window.location.href = "/dashboard";
+                    }
+                }
+            </script>
+            {% else %}
+               <!-- Balanced space for Moderator -->
+            {% endif %}
+        </div>
     </div>
+
+    <!-- HTMX Indicator & Error Handling -->
+    <script>
+        document.addEventListener('htmx:beforeRequest', function(evt) {
+            if(evt.detail.elt.id === 'sync-btn') {
+                evt.detail.elt.disabled = true;
+                evt.detail.elt.querySelector('.icon-normal').classList.add('hidden');
+                evt.detail.elt.querySelector('.icon-loading').classList.remove('hidden');
+            }
+        });
+        document.addEventListener('htmx:afterRequest', function(evt) {
+            if(evt.detail.elt.id === 'sync-btn') {
+                evt.detail.elt.disabled = false;
+                evt.detail.elt.querySelector('.icon-normal').classList.remove('hidden');
+                evt.detail.elt.querySelector('.icon-loading').classList.add('hidden');
+            }
+        });
+        document.addEventListener('htmx:responseError', function(evt) {
+            showToast('❌ Kesalahan Server: ' + (evt.detail.xhr.status || 'Unknown'), 'error');
+        });
+    </script>
 
     <!-- Jitsi Main Container -->
     <div class="flex-1 w-full bg-black relative" hx-get="/rooms/{{ room_id }}/info" hx-trigger="load" hx-swap="none"
@@ -200,7 +247,7 @@
                             'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
                             'security', 'whiteboard'
                         ] : [
-                            'microphone', 'camera', 'desktop', 'fullscreen', 'fodeviceselection', 'hangup', 'profile', 'chat', 'settings', 'raisehand', 'videoquality', 'filmstrip', 'tileview', 'videobackgroundblur', 'help', 'whiteboard'
+                            'microphone', 'camera', 'desktop', 'fullscreen', 'fodeviceselection', 'profile', 'chat', 'settings', 'raisehand', 'videoquality', 'filmstrip', 'tileview', 'videobackgroundblur', 'help', 'whiteboard'
                         ],
                         APP_NAME: '',
                         NATIVE_APP_NAME: '',
@@ -255,6 +302,11 @@
                         remoteVideoMenu: {
                             disableModeratorControls: !data.is_moderator
                         },
+                        hangup: {
+                            showLeave: true,
+                            showEnd: data.is_moderator,
+                            autoLeave: !data.is_moderator
+                        },
                         endConferenceNotificationEnabled: data.is_moderator,
                         p2p: {
                             enabled: true
@@ -264,8 +316,21 @@
 
                 window.jitsiApi = api;
 
+                const updateParticipantCount = () => {
+                    const count = api.getNumberOfParticipants();
+                    const badge = document.getElementById('presence-count');
+                    if (badge) {
+                        badge.innerText = `${count} PESERTA`;
+                    }
+                };
+
+                api.addEventListener("participantJoined", updateParticipantCount);
+                api.addEventListener("participantLeft", updateParticipantCount);
+
                 api.addEventListener("videoConferenceJoined", () => {
                     console.log("Joined conference, forcing avatar:", data.avatar_url);
+                    updateParticipantCount();
+                    
                     const overlay = document.getElementById('loading-overlay');
                     if (overlay) overlay.classList.add('hidden');
 
@@ -297,23 +362,70 @@
                     fetch(`/participants/{{ room_id }}/join`, { method: "POST" });
                 });
 
-                // Chat Monitoring
+                // Chat Monitoring (Supports both old and new Jitsi API events)
                 window.sessionChat = [];
-                api.addEventListener("incomingMessage", (msg) => {
-                    window.sessionChat.push({
-                        time: new Date().toLocaleTimeString(),
-                        sender: msg.nick || "System",
-                        text: msg.message
-                    });
-                });
+                
+                // --- Floating Chat Feature ---
+                const chatContainer = document.createElement('div');
+                chatContainer.className = "fixed bottom-[80px] left-[20px] sm:bottom-[100px] sm:left-[30px] z-[900] flex flex-col gap-2 pointer-events-none w-[300px] sm:w-[350px] max-w-[80vw]";
+                document.body.appendChild(chatContainer);
 
-                api.addEventListener("outgoingMessage", (msg) => {
-                    window.sessionChat.push({
-                        time: new Date().toLocaleTimeString(),
-                        sender: "Saya",
-                        text: msg.message
+                const showFloatingChat = (sender, text, isSelf) => {
+                    const bubble = document.createElement('div');
+                    const bgColor = isSelf ? 'bg-blue-600/90 border-blue-400/50' : 'bg-slate-800/90 border-slate-600/50';
+                    const nameColor = isSelf ? 'text-blue-100' : 'text-emerald-400';
+                    bubble.className = `p-3 sm:p-4 rounded-xl sm:rounded-2xl border backdrop-blur-md shadow-2xl transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto ${bgColor}`;
+                    bubble.innerHTML = `
+                        <div class="text-[10px] sm:text-xs font-black ${nameColor} mb-1 sm:mb-1.5 uppercase tracking-wide truncate">
+                            ${sender}
+                        </div>
+                        <div class="text-xs sm:text-sm font-medium text-white/95 leading-relaxed break-words line-clamp-3">
+                            ${text}
+                        </div>
+                    `;
+                    chatContainer.appendChild(bubble);
+                    
+                    // Animate in
+                    requestAnimationFrame(() => {
+                        bubble.classList.remove('translate-y-4', 'opacity-0');
                     });
-                });
+                    
+                    // Remove after 8 seconds
+                    setTimeout(() => {
+                        bubble.classList.add('opacity-0', 'scale-95');
+                        setTimeout(() => bubble.remove(), 300);
+                    }, 8000);
+                };
+                
+                const handleIncoming = (msg) => {
+                    const sender = msg.nick || msg.displayName || "Seseorang";
+                    const text = msg.message || msg.text;
+                    if (text) {
+                        window.sessionChat.push({
+                            time: new Date().toLocaleTimeString(),
+                            sender: sender,
+                            text: text
+                        });
+                        showFloatingChat(sender, text, false);
+                    }
+                };
+
+                const handleOutgoing = (msg) => {
+                    const text = msg.message || msg.text;
+                    if (text) {
+                        window.sessionChat.push({
+                            time: new Date().toLocaleTimeString(),
+                            sender: "Saya",
+                            text: text
+                        });
+                        showFloatingChat("Saya", text, true);
+                    }
+                };
+
+                api.addEventListener("incomingMessage", handleIncoming);
+                api.addEventListener("chatMessageReceived", handleIncoming);
+                api.addEventListener("outgoingMessage", handleOutgoing);
+                api.addEventListener("chatMessageSent", handleOutgoing);
 
                 api.addEventListener("readyToClose", () => {
                     window.location.href = "/dashboard";

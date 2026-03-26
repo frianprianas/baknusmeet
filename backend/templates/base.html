@@ -659,6 +659,15 @@
             setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(10px)'; }, 2500);
             setTimeout(() => t.remove(), 3000);
         }
+
+        // Listen for HTMX triggered events
+        document.addEventListener("DOMContentLoaded", function() {
+            document.body.addEventListener("showToast", function(e) {
+                if(e.detail && e.detail.msg) {
+                    showToast(e.detail.msg, e.detail.type || 'success');
+                }
+            });
+        });
     </script>
 </head>
 
