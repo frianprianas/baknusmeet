@@ -309,7 +309,8 @@ async def get_room_info(
         "jitsi_base_url": settings.JITSI_PUBLIC_URL,
         "user_email": current_user.email,
         "user_name": current_user.full_name,
-        "avatar_url": avatar_proxy_url
+        "avatar_url": avatar_proxy_url,
+        "exp_timestamp": exp_timestamp
     }
 
 
