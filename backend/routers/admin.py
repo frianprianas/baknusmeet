@@ -3,10 +3,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.orm import selectinload
 from typing import List
+from datetime import datetime, timedelta
 
 from backend.models.database import get_db
-from backend.models.models import User, UserRole
+from backend.models.models import User, UserRole, Room, RoomStatus, Attendance, Participant
 from backend.routers.auth import get_current_user
 from backend.utils.mailcow_api import get_all_mailcow_users
 from backend.config import settings
@@ -122,3 +124,72 @@ async def toggle_user_active(
         <span class='w-1.5 h-1.5 rounded-full {dot_color}'></span>
         {status_text}
     </button>"""
+
+
+@router.get("/archive", response_class=HTMLResponse)
+async def archive_page(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return templates.TemplateResponse(request, "admin_archive.html", {"user": current_user})
+
+
+@router.get("/archive/rooms", response_class=HTMLResponse)
+async def list_archived_rooms(
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    # A room is 'expired' if its scheduled_at + duration is in the past
+    now = datetime.utcnow()
+    result = await db.execute(
+        select(Room).options(selectinload(Room.host)).order_by(Room.scheduled_at.desc())
+    )
+    all_rooms = result.scalars().all()
+
+    expired_rooms = []
+    for room in all_rooms:
+        if room.scheduled_at:
+            end_time = room.scheduled_at + timedelta(minutes=room.duration or 120)
+            if end_time < now:
+                expired_rooms.append(room)
+        # Also include rooms manually marked as ENDED
+        elif room.status == RoomStatus.ENDED:
+            expired_rooms.append(room)
+
+    return templates.TemplateResponse(request, "fragments/archive_room_list.html", {
+        "rooms": expired_rooms,
+        "user": current_user,
+        "now": now,
+    })
+
+
+@router.get("/archive/rooms/{room_id}/participants", response_class=HTMLResponse)
+async def get_room_participants(
+    room_id: int,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    # Load attendance records for this room
+    result = await db.execute(
+        select(Attendance)
+        .where(Attendance.room_id == room_id)
+        .options(selectinload(Attendance.user))
+        .order_by(Attendance.created_at)
+    )
+    records = result.scalars().all()
+
+    return templates.TemplateResponse(request, "fragments/archive_participants.html", {
+        "records": records,
+        "room_id": room_id,
+    })
