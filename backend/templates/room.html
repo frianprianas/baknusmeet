@@ -18,6 +18,7 @@
             <div
                 class="hidden sm:flex items-center gap-3 px-3 py-1.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl">
                 <img src="/static/GM.png" alt="BaknusMeet" class="h-7 w-auto object-contain" />
+                <span class="text-[10px] font-black tracking-[0.2em] uppercase text-white/80">BaknusMeet</span>
             </div>
         </div>
 
@@ -446,7 +447,13 @@
                     const bubble = document.createElement('div');
                     const bgColor = isSelf ? 'bg-blue-600/90 border-blue-400/50' : 'bg-slate-800/90 border-slate-600/50';
                     const nameColor = isSelf ? 'text-blue-100' : 'text-emerald-400';
-                    bubble.className = `p-3 sm:p-4 rounded-xl sm:rounded-2xl border backdrop-blur-md shadow-2xl transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto ${bgColor}`;
+                    bubble.className = `p-3 sm:p-4 rounded-xl sm:rounded-2xl border backdrop-blur-md shadow-2xl transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto cursor-pointer hover:scale-[1.02] hover:brightness-110 ${bgColor}`;
+                    bubble.title = 'Klik untuk buka Chat';
+                    bubble.onclick = () => {
+                        if (window.jitsiApi) {
+                            window.jitsiApi.executeCommand('toggleChat');
+                        }
+                    };
                     bubble.innerHTML = `
                         <div class="text-[10px] sm:text-xs font-black ${nameColor} mb-1 sm:mb-1.5 uppercase tracking-wide truncate">
                             ${sender}
@@ -454,6 +461,7 @@
                         <div class="text-xs sm:text-sm font-medium text-white/95 leading-relaxed break-words line-clamp-3">
                             ${text}
                         </div>
+                        <div class="text-[8px] text-white/40 mt-1.5 uppercase tracking-widest font-bold">Klik untuk buka chat →</div>
                     `;
                     chatContainer.appendChild(bubble);
                     
