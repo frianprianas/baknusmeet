@@ -102,7 +102,7 @@ async def admin_management_page(request: Request, current_user: User = Depends(g
 async def room_page(request: Request, room_id: int, current_user: User = Depends(get_current_user)):
     return templates.TemplateResponse(request, "room.html", {"room_id": room_id, "user": current_user})
 
-# WebSocket Presence Manager (unchanged)
+# WebSocket Presence Manager
 class ConnectionManager:
     def __init__(self):
         self.active_connections: dict[int, list[WebSocket]] = {}
@@ -113,23 +113,57 @@ class ConnectionManager:
         self.active_connections[room_id].append(websocket)
     def disconnect(self, room_id: int, websocket: WebSocket):
         if room_id in self.active_connections:
-            self.active_connections[room_id].remove(websocket)
+            try:
+                self.active_connections[room_id].remove(websocket)
+            except ValueError:
+                pass
+            # Clean up empty room lists to prevent memory leak
+            if not self.active_connections[room_id]:
+                del self.active_connections[room_id]
     async def broadcast_presence_update(self, room_id: int, redis):
-        active_users = await redis.smembers(f"room:{room_id}:presence")
-        message = json.dumps({"type": "presence", "count": len(active_users), "users": list(active_users)})
-        if room_id in self.active_connections:
-            for connection in self.active_connections[room_id]:
-                await connection.send_text(message)
+        try:
+            active_users = await redis.smembers(f"room:{room_id}:presence")
+            message = json.dumps({"type": "presence", "count": len(active_users), "users": list(active_users)})
+            if room_id in self.active_connections:
+                dead = []
+                for connection in self.active_connections[room_id]:
+                    try:
+                        await connection.send_text(message)
+                    except Exception:
+                        dead.append(connection)
+                for d in dead:
+                    self.disconnect(room_id, d)
+        except Exception as e:
+            print(f"WS broadcast error: {e}")
 
 manager = ConnectionManager()
 
 @app.websocket("/ws/presence/{room_id}")
-async def websocket_endpoint(websocket: WebSocket, room_id: int, redis = Depends(get_redis)):
+async def websocket_endpoint(websocket: WebSocket, room_id: int):
+    redis = await get_redis()
     await manager.connect(room_id, websocket)
     try:
         await manager.broadcast_presence_update(room_id, redis)
         while True:
-            await websocket.receive_text()
+            # Timeout after 120s of silence to kill zombie connections
+            import asyncio
+            try:
+                await asyncio.wait_for(websocket.receive_text(), timeout=120.0)
+            except asyncio.TimeoutError:
+                # Client went silent, send a ping to check if alive
+                try:
+                    await websocket.send_text(json.dumps({"type": "ping"}))
+                except Exception:
+                    break  # Connection is dead
     except WebSocketDisconnect:
+        pass
+    except Exception as e:
+        print(f"WS error for room {room_id}: {e}")
+    finally:
+        # ALWAYS clean up, no matter what exception
         manager.disconnect(room_id, websocket)
-        await manager.broadcast_presence_update(room_id, redis)
+        try:
+            await manager.broadcast_presence_update(room_id, redis)
+        except Exception:
+            pass
+
