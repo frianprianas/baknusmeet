@@ -354,6 +354,7 @@
 
                 window.jitsiApi = api;
                 window.currentMeetingUserName = data.user_name;
+                window.whisperEnabled = !!data.whisper_enabled;
                 connectSubtitleSocket();
 
                 const updateParticipantCount = () => {
@@ -713,10 +714,17 @@
             };
         }
 
+        let mediaRecorder = null;
+        let audioStream = null;
+        let whisperInterval = null;
+        let whisperChunkCount = 0;
+
         function toggleSubtitles(btn) {
             if (isSubtitlesEnabled) {
                 isSubtitlesEnabled = false;
-                if (recognition) {
+                if (window.whisperEnabled) {
+                    stopWhisperRecognition();
+                } else if (recognition) {
                     recognition.stop();
                 }
                 btn.classList.remove('bg-cyan-500/20', 'border-cyan-500/30', 'text-cyan-400');
@@ -731,8 +739,110 @@
                 btn.querySelector('svg').classList.add('text-cyan-400');
                 btn.querySelector('span').innerText = 'Subtitle: On';
                 
-                startSpeechRecognition();
-                showToast('Subtitel diaktifkan (Bahasa Indonesia)', 'success');
+                if (window.whisperEnabled) {
+                    startWhisperRecognition();
+                    showToast('Subtitel diaktifkan (Menggunakan Whisper AI)', 'success');
+                } else {
+                    startSpeechRecognition();
+                    showToast('Subtitel diaktifkan (Bahasa Indonesia)', 'success');
+                }
+            }
+        }
+
+        function startWhisperRecognition() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showToast('❌ Browser tidak mendukung perekaman audio untuk Whisper', 'error');
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    audioStream = stream;
+                    
+                    const recordAndSend = () => {
+                        if (!isSubtitlesEnabled) return;
+                        
+                        let chunks = [];
+                        let mimeType = 'audio/webm';
+                        if (!MediaRecorder.isTypeSupported(mimeType)) {
+                            mimeType = 'audio/ogg';
+                        }
+                        if (!MediaRecorder.isTypeSupported(mimeType)) {
+                            mimeType = '';
+                        }
+
+                        const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+                        
+                        recorder.ondataavailable = (e) => {
+                            if (e.data && e.data.size > 0) {
+                                chunks.push(e.data);
+                            }
+                        };
+                        
+                        recorder.onstop = async () => {
+                            if (chunks.length === 0 || !isSubtitlesEnabled) return;
+                            
+                            const blob = new Blob(chunks, { type: mimeType || 'audio/webm' });
+                            const formData = new FormData();
+                            formData.append('file', blob, `chunk_${whisperChunkCount++}.webm`);
+                            
+                            try {
+                                const response = await fetch(`/rooms/{{ room_id }}/whisper-transcribe`, {
+                                    method: 'POST',
+                                    body: formData
+                                });
+                                
+                                if (response.ok) {
+                                    const result = await response.json();
+                                    const text = result.text || "";
+                                    if (text.trim()) {
+                                        if (subtitleSocket && subtitleSocket.readyState === WebSocket.OPEN) {
+                                            subtitleSocket.send(JSON.stringify({
+                                                type: "subtitle",
+                                                sender: window.currentMeetingUserName || "Seseorang",
+                                                text: text,
+                                                isFinal: true
+                                            }));
+                                        }
+                                        
+                                        showSubtitle(window.currentMeetingUserName || "Saya", text, true);
+                                        
+                                        const timestamp = new Date().toLocaleTimeString();
+                                        window.sessionTranscript.push(`[${timestamp}] ${window.currentMeetingUserName || "Saya"}: ${text}`);
+                                    }
+                                }
+                            } catch (err) {
+                                console.error("Whisper transmission failed:", err);
+                            }
+                        };
+                        
+                        recorder.start();
+                        
+                        setTimeout(() => {
+                            if (recorder.state !== "inactive") {
+                                recorder.stop();
+                            }
+                        }, 3500);
+                    };
+                    
+                    recordAndSend();
+                    whisperInterval = setInterval(recordAndSend, 4000);
+                })
+                .catch(err => {
+                    console.error("Error accessing microphone for Whisper:", err);
+                    showToast('❌ Gagal mengakses mikrofon untuk Whisper', 'error');
+                    toggleSubtitles(document.getElementById('subtitle-btn'));
+                });
+        }
+
+        function stopWhisperRecognition() {
+            if (whisperInterval) {
+                clearInterval(whisperInterval);
+                whisperInterval = null;
+            }
+            if (audioStream) {
+                audioStream.getTracks().forEach(track => track.stop());
+                audioStream = null;
             }
         }
 

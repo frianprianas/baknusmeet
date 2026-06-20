@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, Form, Response
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Form, Response, File, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -310,7 +310,8 @@ async def get_room_info(
         "user_email": current_user.email,
         "user_name": current_user.full_name,
         "avatar_url": avatar_proxy_url,
-        "exp_timestamp": exp_timestamp
+        "exp_timestamp": exp_timestamp,
+        "whisper_enabled": bool(settings.WHISPER_API_URL)
     }
 
 
@@ -598,4 +599,40 @@ async def summarize_transcript(
     except Exception as e:
         print(f"SUMMARIZE_ERROR: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/{room_id}/whisper-transcribe")
+async def whisper_transcribe(
+    room_id: int,
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Transcribe audio chunk using remote Whisper API on Tailscale.
+    """
+    if not settings.WHISPER_API_URL:
+        raise HTTPException(status_code=400, detail="Whisper API URL belum dikonfigurasi di .env")
+
+    # Read file bytes
+    file_bytes = await file.read()
+    if len(file_bytes) == 0:
+        return {"text": ""}
+
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            files = {'file': (file.filename or 'audio.webm', file_bytes, file.content_type or 'audio/webm')}
+            response = await client.post(settings.WHISPER_API_URL, files=files)
+            if response.status_code == 200:
+                resp_json = response.json()
+                transcription = resp_json.get("text") or resp_json.get("transcription") or ""
+                transcription = transcription.strip()
+                return {"text": transcription}
+            else:
+                print(f"Whisper API error {response.status_code}: {response.text}")
+                return {"text": "", "error": f"API error {response.status_code}"}
+    except Exception as e:
+        print(f"Failed to call Whisper API: {e}")
+        return {"text": "", "error": str(e)}
+
 
