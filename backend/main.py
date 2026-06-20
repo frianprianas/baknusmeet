@@ -136,6 +136,17 @@ class ConnectionManager:
         except Exception as e:
             print(f"WS broadcast error: {e}")
 
+    async def broadcast_message(self, room_id: int, message: str):
+        if room_id in self.active_connections:
+            dead = []
+            for connection in self.active_connections[room_id]:
+                try:
+                    await connection.send_text(message)
+                except Exception:
+                    dead.append(connection)
+            for d in dead:
+                self.disconnect(room_id, d)
+
 manager = ConnectionManager()
 
 @app.websocket("/ws/presence/{room_id}")
@@ -148,7 +159,18 @@ async def websocket_endpoint(websocket: WebSocket, room_id: int):
             # Timeout after 120s of silence to kill zombie connections
             import asyncio
             try:
-                await asyncio.wait_for(websocket.receive_text(), timeout=120.0)
+                data_str = await asyncio.wait_for(websocket.receive_text(), timeout=120.0)
+                try:
+                    data = json.loads(data_str)
+                    if data.get("type") == "subtitle":
+                        msg = json.dumps({
+                            "type": "subtitle",
+                            "sender": data.get("sender", "Seseorang"),
+                            "text": data.get("text", "")
+                        })
+                        await manager.broadcast_message(room_id, msg)
+                except Exception:
+                    pass
             except asyncio.TimeoutError:
                 # Client went silent, send a ping to check if alive
                 try:

@@ -26,4 +26,9 @@ class Settings(BaseSettings):
     DRIVE_BASE_URL: str = os.getenv("DRIVE_BASE_URL", "https://baknusdrive.smkbn666.sch.id/api")
     MEET_SECRET_KEY: str = os.getenv("MEET_SECRET_KEY", "BAKNUS_MEET_SECRET")
 
+    # Remote AI Configuration (Ollama / Qwen / Whisper)
+    OLLAMA_API_URL: str = os.getenv("OLLAMA_API_URL", "http://localhost:11434")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "qwen2.5")
+    WHISPER_API_URL: str = os.getenv("WHISPER_API_URL", "")
+
 settings = Settings()

@@ -501,3 +501,101 @@ async def save_chat_history(
         print(f"SAVE_CHAT_ERROR: {e}")
         # Always return JSON even on true exception
         raise HTTPException(status_code=500, detail=str(e))
+
+
+class TranscriptRequest(BaseModel):
+    transcript_content: str
+
+@router.post("/{room_id}/summarize-transcript")
+async def summarize_transcript(
+    room_id: int,
+    data: TranscriptRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Summarize the meeting transcript using Ollama (Qwen) on the remote server via Tailscale.
+    Saves the summarized markdown file to BaknusDrive.
+    Accessible only by Moderators (Admin, Guru, TU).
+    """
+    if str(current_user.role.value if hasattr(current_user.role, 'value') else current_user.role) not in ["ADMIN", "GURU", "TU"]:
+        raise HTTPException(status_code=403, detail="Hanya moderator yang dapat merangkum rapat")
+
+    room_stmt = select(Room).where(Room.id == room_id)
+    room_res = await db.execute(room_stmt)
+    room = room_res.scalars().first()
+    if not room:
+        raise HTTPException(status_code=404, detail="Room tidak ditemukan")
+
+    if not data.transcript_content:
+        raise HTTPException(status_code=400, detail="Transkrip rapat kosong")
+
+    # Call Ollama API on the remote server
+    ollama_url = f"{settings.OLLAMA_API_URL.rstrip('/')}/api/generate"
+    
+    prompt = (
+        "Anda adalah asisten rapat AI untuk SMK Bakti Nusantara. Berikut adalah transkrip percakapan rapat. "
+        "Tolong buatkan ringkasan rapat (Minutes of Meeting / MOM) yang profesional, terstruktur, dan detail dalam Bahasa Indonesia. "
+        "MOM harus mencakup:\n"
+        "1. Topik Utama yang dibahas\n"
+        "2. Poin-poin penting dari setiap pembicara\n"
+        "3. Keputusan yang diambil\n"
+        "4. Rencana tindakan selanjutnya (Action Items) beserta penanggung jawabnya jika ada.\n\n"
+        "Format ringkasan rapat ini dengan indah dan rapi menggunakan format Markdown.\n\n"
+        f"Transkrip Rapat:\n{data.transcript_content}"
+    )
+
+    import httpx
+    summary_text = ""
+    try:
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            payload = {
+                "model": settings.OLLAMA_MODEL,
+                "prompt": prompt,
+                "stream": False
+            }
+            response = await client.post(ollama_url, json=payload)
+            if response.status_code == 200:
+                resp_json = response.json()
+                summary_text = resp_json.get("response", "")
+            else:
+                raise Exception(f"Ollama API returned status code {response.status_code}: {response.text}")
+    except Exception as ollama_err:
+        print(f"OLLAMA ERROR: {ollama_err}")
+        # If Ollama fails, we fallback to a simple header stating that AI was offline, and output the raw transcript.
+        summary_text = (
+            f"# Ringkasan Rapat: {room.title} (AI Offline)\n\n"
+            "Maaf, server AI Ollama di Tailscale tidak merespon saat perangkuman otomatis dilakukan.\n"
+            "Berikut adalah isi transkrip rapat mentah:\n\n"
+            f"```\n{data.transcript_content}\n```"
+        )
+
+    # Generate filename with timestamp
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_title = "".join([c if c.isalnum() else "_" for c in room.title])
+    file_name = f"Ringkasan_MOM_{safe_title}_{timestamp}.md"
+
+    # Upload to BaknusDrive
+    try:
+        # Ensure folder exists
+        await setup_meet_folder(teacher_email=current_user.email)
+        
+        file_bytes = summary_text.encode('utf-8')
+        sync_res = await upload_file_to_drive(
+            file_name=file_name,
+            file_content=file_bytes,
+            teacher_email=current_user.email,
+            category="meet"
+        )
+
+        if isinstance(sync_res, dict) and sync_res.get("status", 200) < 400:
+             return {"status": "success", "file_name": file_name, "summary": summary_text}
+        
+        error_msg = sync_res.get("error", sync_res.get("message", "Gagal menyimpan ke Drive"))
+        raise HTTPException(status_code=500, detail=error_msg)
+            
+    except Exception as e:
+        print(f"SUMMARIZE_ERROR: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
