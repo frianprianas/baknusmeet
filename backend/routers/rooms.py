@@ -620,7 +620,7 @@ async def whisper_transcribe(
 
     import httpx
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=120.0) as client:
             files = {'file': (file.filename or 'audio.webm', file_bytes, file.content_type or 'audio/webm')}
             response = await client.post(settings.WHISPER_API_URL, files=files)
             if response.status_code == 200:
@@ -632,7 +632,9 @@ async def whisper_transcribe(
                 print(f"Whisper API error {response.status_code}: {response.text}")
                 return {"text": "", "error": f"API error {response.status_code}"}
     except Exception as e:
-        print(f"Failed to call Whisper API: {e}")
+        import traceback
+        print("Failed to call Whisper API:")
+        traceback.print_exc()
         return {"text": "", "error": str(e)}
 
 
