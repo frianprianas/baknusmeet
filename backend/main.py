@@ -163,12 +163,28 @@ async def websocket_endpoint(websocket: WebSocket, room_id: int):
                 try:
                     data = json.loads(data_str)
                     if data.get("type") == "subtitle":
+                        is_final = data.get("isFinal", False)
                         msg = json.dumps({
                             "type": "subtitle",
                             "sender": data.get("sender", "Seseorang"),
-                            "text": data.get("text", "")
+                            "text": data.get("text", ""),
+                            "isFinal": is_final
                         })
                         await manager.broadcast_message(room_id, msg)
+                        
+                        if is_final:
+                            try:
+                                import os
+                                from datetime import datetime
+                                os.makedirs("backend/transcripts", exist_ok=True)
+                                timestamp = datetime.now().strftime("%H:%M:%S")
+                                sender = data.get("sender", "Seseorang")
+                                text = data.get("text", "").strip()
+                                if text:
+                                    with open(f"backend/transcripts/room_{room_id}.txt", "a", encoding="utf-8") as f:
+                                        f.write(f"[{timestamp}] {sender}: {text}\n")
+                            except Exception as fe:
+                                print(f"Error saving transcript chunk: {fe}")
                 except Exception:
                     pass
             except asyncio.TimeoutError:

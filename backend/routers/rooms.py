@@ -505,7 +505,7 @@ async def save_chat_history(
 
 
 class TranscriptRequest(BaseModel):
-    transcript_content: str
+    transcript_content: Optional[str] = None
 
 @router.post("/{room_id}/summarize-transcript")
 async def summarize_transcript(
@@ -528,8 +528,24 @@ async def summarize_transcript(
     if not room:
         raise HTTPException(status_code=404, detail="Room tidak ditemukan")
 
-    if not data.transcript_content:
-        raise HTTPException(status_code=400, detail="Transkrip rapat kosong")
+    transcript_content = data.transcript_content or ""
+    
+    # Try reading from persistent backend local file
+    file_path = f"backend/transcripts/room_{room_id}.txt"
+    file_content = ""
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                file_content = f.read().strip()
+        except Exception as e:
+            print(f"Error reading transcript file: {e}")
+
+    if file_content:
+        # Use backend transcript if we have it
+        transcript_content = file_content
+
+    if not transcript_content:
+        raise HTTPException(status_code=400, detail="Transkrip rapat kosong atau belum ada percakapan")
 
     # Call Ollama API on the remote server
     ollama_url = f"{settings.OLLAMA_API_URL.rstrip('/')}/api/generate"
@@ -543,7 +559,7 @@ async def summarize_transcript(
         "3. Keputusan yang diambil\n"
         "4. Rencana tindakan selanjutnya (Action Items) beserta penanggung jawabnya jika ada.\n\n"
         "Format ringkasan rapat ini dengan indah dan rapi menggunakan format Markdown.\n\n"
-        f"Transkrip Rapat:\n{data.transcript_content}"
+        f"Transkrip Rapat:\n{transcript_content}"
     )
 
     import httpx
@@ -568,7 +584,7 @@ async def summarize_transcript(
             f"# Ringkasan Rapat: {room.title} (AI Offline)\n\n"
             "Maaf, server AI Ollama di Tailscale tidak merespon saat perangkuman otomatis dilakukan.\n"
             "Berikut adalah isi transkrip rapat mentah:\n\n"
-            f"```\n{data.transcript_content}\n```"
+            f"```\n{transcript_content}\n```"
         )
 
     # Generate filename with timestamp
